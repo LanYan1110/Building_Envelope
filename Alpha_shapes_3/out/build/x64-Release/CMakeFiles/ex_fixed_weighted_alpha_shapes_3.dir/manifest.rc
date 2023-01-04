@@ -1,0 +1,2 @@
+#pragma code_page(65001)
+1 /* CREATEPROCESS_MANIFEST_RESOURCE_ID */ 24 /* RT_MANIFEST */ "C:/Users/seuya/Documents/Thesis/Theis_Projects/Alpha_shapes_3/out/build/x64-Release/CMakeFiles/ex_fixed_weighted_alpha_shapes_3.dir/embed.manifest"
