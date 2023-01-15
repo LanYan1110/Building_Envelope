@@ -6,6 +6,7 @@
 #include <CGAL/Delaunay_triangulation_3.h>
 
 #include <fstream>
+#include <sstream>
 #include <vector>
 
 #include <unordered_set>
@@ -24,38 +25,43 @@ typedef Alpha_shape_3::Alpha_iterator                Alpha_iterator;
 
 int main()
 {
-  std::vector<Point> points;
+    std::vector<Point> points;
 
-//read input
-  std::ifstream is("C:/Users/seuya/Documents/Thesis/Theis_Projects/Intermediate_Data/one_element_vertices_3");
-  //std::ifstream is("C:/Users/seuya/Documents/Thesis/CGAL-5.5.1-examples/CGAL-5.5.1/examples/Alpha_shapes_3/data/bunny_1000");
-  int n;
-  is >> n;
-  double x, y, z;
-  for (int i=0;i<n;++i)
-  {
+    //read input
+    std::string dir = "C:/Users/seuya/Documents/Thesis/Building_Envelope";
+    std::string input_file = "AC20-FZK-Haus.ifc_vertices";
+    std::stringstream ss;
+    ss << dir << "/Intermediate_Data/" << input_file;
+    std::string input_path = ss.str();
+    std::ifstream is(input_path);
+ 
+    int n;
+    is >> n;
+    double x, y, z;
+    for (int i=0;i<n;++i)
+    {
     is >> x >> y >> z;
     points.push_back( Point(x, y, z) );
-  }
+    }
 
-  std::cerr << points.size() << " points read.\n";
+    std::cerr << points.size() << " points read.\n";
  
-// compute alpha shape
-  Alpha_shape_3 as(points.begin(), points.end());
-  Alpha_shape_3::NT alpha_solid = as.find_alpha_solid();
-  as.set_alpha(alpha_solid);
+    // compute alpha shape
+    Alpha_shape_3 as(points.begin(), points.end());
+    Alpha_shape_3::NT alpha_solid = as.find_alpha_solid();
+    as.set_alpha(alpha_solid);
 
-  std::cerr << "alpha_solid = " << alpha_solid << "\n";
-  std::cerr << as.number_of_solid_components() << " number of solid components\n";
+    std::cerr << "alpha_solid = " << alpha_solid << "\n";
+    std::cerr << as.number_of_solid_components() << " number of solid components\n";
 
-  // collect alpha-shape facets accessible from the infinity 
-  // marks the cells that are in the same component as the infinite vertex by flooding 
-  std::unordered_set< Alpha_shape_3::Cell_handle > marked_cells;
-  std::vector< Alpha_shape_3::Cell_handle > queue;
-  queue.push_back( as.infinite_cell() );
+    // collect alpha-shape facets accessible from the infinity 
+    // marks the cells that are in the same component as the infinite vertex by flooding 
+    std::unordered_set< Alpha_shape_3::Cell_handle > marked_cells;
+    std::vector< Alpha_shape_3::Cell_handle > queue;
+    queue.push_back( as.infinite_cell() );
 
-  while(!queue.empty())
-  {
+    while(!queue.empty())
+    {
     Alpha_shape_3::Cell_handle back = queue.back();
     queue.pop_back();
 
@@ -63,59 +69,65 @@ int main()
 
     for (int i=0; i<4; ++i)
     {
-      if (as.classify(Alpha_shape_3::Facet(back, i))==Alpha_shape_3::EXTERIOR &&
-          marked_cells.count(back->neighbor(i))==0)
+        if (as.classify(Alpha_shape_3::Facet(back, i))==Alpha_shape_3::EXTERIOR &&
+            marked_cells.count(back->neighbor(i))==0)
         queue.push_back( back->neighbor(i) );
     }
-  }
+    }
 
-  // filter regular facets to restrict them to those adjacent to a marked cell
-  std::vector< Alpha_shape_3::Facet > regular_facets;
-  as.get_alpha_shape_facets(std::back_inserter( regular_facets ), Alpha_shape_3::REGULAR );
+    // filter regular facets to restrict them to those adjacent to a marked cell
+    std::vector< Alpha_shape_3::Facet > regular_facets;
+    as.get_alpha_shape_facets(std::back_inserter( regular_facets ), Alpha_shape_3::REGULAR );
 
-  std::vector<Alpha_shape_3::Facet> filtered_regular_facets;
-  for(Alpha_shape_3::Facet f : regular_facets)
-  {
+    std::vector<Alpha_shape_3::Facet> filtered_regular_facets;
+    for(Alpha_shape_3::Facet f : regular_facets)
+    {
     if ( marked_cells.count(f.first)==1 )
-      filtered_regular_facets.push_back(f);
+        filtered_regular_facets.push_back(f);
     else
     {
-      f = as.mirror_facet(f);
-      if ( marked_cells.count(f.first)==1 )
+        f = as.mirror_facet(f);
+        if ( marked_cells.count(f.first)==1 )
         filtered_regular_facets.push_back(f);
     }
-  }
+    }
 
-// dump into OFF format
-  // assign an id per vertex
-  std::unordered_map< Alpha_shape_3::Vertex_handle, std::size_t> vids;
-  points.clear();
+    // dump into OFF format
+    // assign an id per vertex
+    std::unordered_map< Alpha_shape_3::Vertex_handle, std::size_t> vids;
+    points.clear();
 
-  for(Alpha_shape_3::Facet f : filtered_regular_facets)
-  {
+    for(Alpha_shape_3::Facet f : filtered_regular_facets)
+    {
     for (int i=1;i<4; ++i)
     {
-      Alpha_shape_3::Vertex_handle vh = f.first->vertex((f.second+i)%4);
-      if (vids.insert( std::make_pair(vh, points.size()) ).second)
+        Alpha_shape_3::Vertex_handle vh = f.first->vertex((f.second+i)%4);
+        if (vids.insert( std::make_pair(vh, points.size()) ).second)
         points.push_back( vh->point() );
     }
-  }
+    }
 
-  // writing
-  std::ofstream output("C:/Users/seuya/Documents/Thesis/Theis_Projects/Intermediate_Data/outer_shape4.off");
-  output << "OFF\n " << points.size() << " " << filtered_regular_facets.size() << " 0\n";
-  std::copy(points.begin(), points.end(), std::ostream_iterator<Point>(output, "\n"));
-  for(const Alpha_shape_3::Facet& f : filtered_regular_facets)
-  {
+    // writing
+
+    std::stringstream ss2;
+    ss2 << dir << "/Intermediate_Data/" << input_file << "withplacement.off";
+    std::string output_path = ss2.str();
+    std::cout << output_path << std::endl;
+
+    std::ofstream output(output_path);
+    output << "OFF\n " << points.size() << " " << filtered_regular_facets.size() << " 0\n";
+    std::copy(points.begin(), points.end(), std::ostream_iterator<Point>(output, "\n"));
+    for(const Alpha_shape_3::Facet& f : filtered_regular_facets)
+    {
     output << 3;
 
     for (int i=0;i<3; ++i)
     {
-      Alpha_shape_3::Vertex_handle vh = f.first->vertex( as.vertex_triple_index(f.second, i) );
-      output << " " << vids[vh];
+        Alpha_shape_3::Vertex_handle vh = f.first->vertex( as.vertex_triple_index(f.second, i) );
+        output << " " << vids[vh];
     }
     output << "\n";
-  }
+    }
 
-  return 0;
-}
+    return 0;
+    }

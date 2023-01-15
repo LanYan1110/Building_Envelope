@@ -48,9 +48,10 @@ void extract_vertices(IfcSchema::IfcProduct::list::ptr prods,std::string output,
 							IfcSchema::IfcRepresentationItem* p = *cur_it;
 
 							std::cout << p->data().type()->name() << std::endl;
-
-							if (p->data().type()->name() == "IfcExtrudedAreaSolid") 
+							//p->data().type()->name() == "IfcExtrudedAreaSolid"
+							if (true) 
 							{
+								std::cout << p->data().type()->name() << std::endl;
 								IfcGeom::IfcRepresentationShapeItems s= my_kernel.convert(p);
 								std::cout << "size" << s.size() << std::endl;
 								if (s.size() > 0) {
@@ -59,13 +60,17 @@ void extract_vertices(IfcSchema::IfcProduct::list::ptr prods,std::string output,
 										// the problem is with this line
 										IfcGeom::IfcRepresentationShapeItem cur_item = s[0];
 										TopoDS_Shape shape = cur_item.Shape();
+										gp_GTrsf placement = cur_item.Placement();
 										TopExp_Explorer expl_v;
 										for (expl_v.Init(shape, TopAbs_VERTEX); expl_v.More(); expl_v.Next())
 										{
 											TopoDS_Vertex vertex = TopoDS::Vertex(expl_v.Current());
 											gp_Pnt p = BRep_Tool::Pnt(vertex);
-											std::cout << p.X() << " " << p.Y() << " " << p.Z() << std::endl;
-											points.emplace_back(p);
+											gp_XYZ p2(p.X(), p.Y(),p.Z());
+											placement.Transforms(p2);
+											gp_Pnt p3 = gp_Pnt(p2);
+											std::cout << p3.X() << " " << p3.Y() << " " << p3.Z() << std::endl;
+											points.emplace_back(p3);
 
 										}
 									}

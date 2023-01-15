@@ -15,6 +15,7 @@
 #include <Bnd_Box.hxx>
 #include <GProp_GProps.hxx>
 #include <BRepGProp.hxx>
+#include <gp_GTrsf.hxx>
 
 // IfcOpenShell includes
 #include <ifcparse/IfcFile.h>
