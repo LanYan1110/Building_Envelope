@@ -50,7 +50,7 @@ main.cpp
 inc/helper.cpp
 inc/floorProcessor.cpp
 inc/roomProcessor.cpp
-)
+ "inc/GetAllPoints.cpp" "inc/GetAllPoints.h")
 
 foreach(LIB ${IFC_LIBRARIES})
     message(STATUS "IFC libraries are ${LIB}")
