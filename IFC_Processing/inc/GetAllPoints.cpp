@@ -9,6 +9,7 @@ void extract_vertices(IfcSchema::IfcProduct::list::ptr prods,std::string output,
 
 	// Extract vertices by iterating through IfcProducts
 	int ifc_p_i = 0;
+
 	for (auto it = prods->begin(); it != prods->end(); it++)
 	{
 		// Get the placement
@@ -18,8 +19,6 @@ void extract_vertices(IfcSchema::IfcProduct::list::ptr prods,std::string output,
 		//if (prod->data().type()->name() == "IfcWall") {}
 		//if (prod->data().type()->name() == "IfcWallStandardCase") {}
 		//if (prod->data().type()->name() == "IfcRoof") {}
-
-		
 
 		if (prod->hasRepresentation())
 		{
@@ -33,7 +32,7 @@ void extract_vertices(IfcSchema::IfcProduct::list::ptr prods,std::string output,
 				prod->data().type()->name() == "IfcAnnotation") {
 				continue;
 			}
-			std::cout << prod->data().type()->name() << std::endl;
+			//std::cout << prod->data().type()->name() << std::endl;
 
 			IfcSchema::IfcProductRepresentation* rep = prod->Representation();
 			IfcTemplatedEntityList< ::IfcSchema::IfcRepresentation >::ptr p = rep->Representations();
@@ -43,7 +42,6 @@ void extract_vertices(IfcSchema::IfcProduct::list::ptr prods,std::string output,
 					IfcSchema::IfcRepresentation* cur = *re;
 
 					if (cur->Items()) {
-						// Problem is with this part
 						IfcTemplatedEntityList< ::IfcSchema::IfcRepresentationItem >::ptr li = cur->Items();
 						for (auto cur_it = li->begin(); cur_it != li->end(); cur_it++) {
 
@@ -54,23 +52,32 @@ void extract_vertices(IfcSchema::IfcProduct::list::ptr prods,std::string output,
 							if (p->data().type()->name() == "IfcExtrudedAreaSolid") 
 							{
 								IfcGeom::IfcRepresentationShapeItems s= my_kernel.convert(p);
+								std::cout << "size" << s.size() << std::endl;
+								if (s.size() > 0) {
+									for (int i = 0; i <s.size(); i++) {
+										std::cout <<"i: " <<i<<std::endl;
+										// the problem is with this line
+										IfcGeom::IfcRepresentationShapeItem cur_item = s[0];
+										TopoDS_Shape shape = cur_item.Shape();
+										TopExp_Explorer expl_v;
+										for (expl_v.Init(shape, TopAbs_VERTEX); expl_v.More(); expl_v.Next())
+										{
+											TopoDS_Vertex vertex = TopoDS::Vertex(expl_v.Current());
+											gp_Pnt p = BRep_Tool::Pnt(vertex);
+											std::cout << p.X() << " " << p.Y() << " " << p.Z() << std::endl;
+											points.emplace_back(p);
+
+										}
+									}
+								}
+
+							}
+
+								
+								std::cout << "\n" << std::endl;
 							}					
 							
-							//std::cout << "size" << s.size() << std::endl;
-							//for (int i = 0; i <= s.size(); i++) {
-							//	IfcGeom::IfcRepresentationShapeItem cur_item = s[i];
-							//	TopoDS_Shape shape = cur_item.Shape();
-							//	TopExp_Explorer expl_v;
-							//	for (expl_v.Init(shape, TopAbs_VERTEX); expl_v.More(); expl_v.Next())
-							//	{
-							//		TopoDS_Vertex vertex = TopoDS::Vertex(expl_v.Current());
-							//		gp_Pnt p = BRep_Tool::Pnt(vertex);
-							//		std::cout << p.X() << " " << p.Y() << " " << p.Z() << std::endl;
-							//		//points.emplace_back(p);
 
-							//	}
-							//}
-							//std::cout << "\n" << std::endl;
 						}
 
 					}
@@ -80,7 +87,7 @@ void extract_vertices(IfcSchema::IfcProduct::list::ptr prods,std::string output,
 		}
 		
 		
-	}
+	
 	//std::cout << "Total Number of IfcProduct: " << ifc_p_i << std::endl;
 
 	// Write points to a text file to be feed into 3D alpha shape

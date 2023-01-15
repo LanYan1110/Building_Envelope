@@ -7,6 +7,7 @@
 
 #include <GProp_GProps.hxx>
 #include <BRepGProp.hxx>
+#
 
 #include <ifcparse/IfcFile.h>
 #include <ifcgeom/IfcGeom.h>

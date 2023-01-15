@@ -10,6 +10,11 @@
 
 // openCASCADE includes
 #include <TopoDS.hxx>
+#include <BRep_Builder.hxx>
+#include <BRepBndLib.hxx>
+#include <Bnd_Box.hxx>
+#include <GProp_GProps.hxx>
+#include <BRepGProp.hxx>
 
 // IfcOpenShell includes
 #include <ifcparse/IfcFile.h>

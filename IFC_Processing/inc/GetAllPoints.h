@@ -13,8 +13,15 @@
 
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
-#include <boost/geometry.hpp>
-#include <boost/geometry/index/rtree.hpp>
+#include <boost/algorithm/string.hpp>
+
+
+#include <TopoDS.hxx>
+#include <BRep_Builder.hxx>
+#include <BRepBndLib.hxx>
+#include <Bnd_Box.hxx>
+#include <GProp_GProps.hxx>
+#include <BRepGProp.hxx>
 
 #include <ifcparse/IfcFile.h>
 #include <ifcgeom/IfcGeom.h>
