@@ -29,11 +29,12 @@ int main()
 
     //read input
     std::string dir = "C:/Users/seuya/Documents/Thesis/Building_Envelope";
-    std::string input_file = "AC20-FZK-Haus.ifc_vertices_sampled";
+    std::string input_file = "AC-20-Smiley-West-10-Bldg.ifc_vertices_sampled";
     std::stringstream ss;
-    ss << dir << "/Intermediate_Data/" << input_file;
+    ss << dir << "/Intermediate_Data/vertices/" << input_file;
     std::string input_path = ss.str();
     std::ifstream is(input_path);
+    std::cout<<input_path;
  
     int n;
     is >> n;

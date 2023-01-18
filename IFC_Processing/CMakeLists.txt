@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
+set( CMAKE_BUILD_TYPE "Release")
 
 # set the project name
 project(ifc_project CXX)
@@ -48,7 +49,7 @@ string(REGEX REPLACE "([^;]+)" "${OpenCASCADEC_LIBRARY_DIR}/\\1.lib" OCC_LIBRARI
 add_executable(${PROJECT_NAME} 
 main.cpp
 
- "inc/GetAllPoints.cpp" "inc/GetAllPoints.h" "inc/getallpoints2.cpp" "inc/getallpoints2.h" "inc/helper.cpp" "inc/helper.h")
+ "inc/GetAllPoints.cpp" "inc/GetAllPoints.h" "inc/getallpoints2.cpp" "inc/getallpoints2.h" "inc/helper.cpp" "inc/helper.h" )
 
 foreach(LIB ${IFC_LIBRARIES})
     message(STATUS "IFC libraries are ${LIB}")

@@ -27,14 +27,16 @@ void extract_vertices_sample(IfcSchema::IfcProduct::list::ptr prods, std::string
 		//if (prod->data().type()->name() == "IfcWall") {}
 		//if (prod->data().type()->name() == "IfcWallStandardCase") {}
 		//if (prod->data().type()->name() == "IfcRoof") {}
+		//prod->data().type()->name() == "IfcDoor" ||
+		//	prod->data().type()->name() == "IfcWindow" ||
 
+		// preserve or not preserve door and window?
+		//prod->
 		if (prod->hasRepresentation())
 		{
 			if (prod->data().type()->name() == "IfcSite" ||
 				prod->data().type()->name() == "IfcStair" ||
 				prod->data().type()->name() == "IfcOpeningElement" ||
-				prod->data().type()->name() == "IfcDoor" ||
-				prod->data().type()->name() == "IfcWindow" ||
 				prod->data().type()->name() == "IfcSpace" ||
 				prod->data().type()->name() == "IfcRailing" ||
 				prod->data().type()->name() == "IfcAnnotation") {
@@ -45,13 +47,7 @@ void extract_vertices_sample(IfcSchema::IfcProduct::list::ptr prods, std::string
 
 			TopoDS_Shape shape = h->getObjectShape(prod);
 			TopExp_Explorer expl_v;
-			for (expl_v.Init(shape, TopAbs_VERTEX); expl_v.More(); expl_v.Next())
-			{
-				TopoDS_Vertex vertex = TopoDS::Vertex(expl_v.Current());
-				gp_Pnt p = BRep_Tool::Pnt(vertex);
-				//std::cout << p.X() << " " << p.Y() << " " << p.Z() << std::endl;
-				points.emplace_back(p);
-			}
+
 
 			for (expl_v.Init(shape, TopAbs_FACE); expl_v.More(); expl_v.Next())
 			{
@@ -64,8 +60,8 @@ void extract_vertices_sample(IfcSchema::IfcProduct::list::ptr prods, std::string
 				BRepTools::UVBounds(face,UMin,UMax,VMin,VMax);
 				
 
-				double U_interval = (UMax - UMin) / 20;
-				double V_interval = (VMax - VMin) / 20;
+				double U_interval = (UMax - UMin) / 5;
+				double V_interval = (VMax - VMin) / 5;
 				
 				double u = UMin; double v = VMin;
 
