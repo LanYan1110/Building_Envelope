@@ -29,7 +29,7 @@ int main()
 
     //read input
     std::string dir = "C:/Users/seuya/Documents/Thesis/Building_Envelope";
-    std::string input_file = "AC20-FZK-Haus.ifc_vertices";
+    std::string input_file = "AC20-FZK-Haus.ifc_vertices_sampled";
     std::stringstream ss;
     ss << dir << "/Intermediate_Data/" << input_file;
     std::string input_path = ss.str();
@@ -110,7 +110,7 @@ int main()
     // writing
 
     std::stringstream ss2;
-    ss2 << dir << "/Intermediate_Data/" << input_file << "withplacement.off";
+    ss2 << dir << "/Intermediate_Data/" << input_file << "off.off";
     std::string output_path = ss2.str();
     std::cout << output_path << std::endl;
 

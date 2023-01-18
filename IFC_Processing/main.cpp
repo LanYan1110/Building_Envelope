@@ -1,5 +1,7 @@
 
 #include "inc/GetAllPoints.h"
+#include "inc/GetAllPoints2.h"
+#include "inc/helper.h"
 
 
 #include <iostream>
@@ -45,12 +47,19 @@ int main(int argc, char** argv) {
 	// Iterate through the IfcProducts
 	IfcSchema::IfcProduct::list::ptr prods = file->instances_by_type<IfcSchema::IfcProduct>();
 
-
 	std::stringstream ss2;
 	ss2 << dir << "/Intermediate_Data/" << input_file<<"_vertices";
 	std::string output_path = ss2.str();
 	std::cout << output_path << std::endl;
-	extract_vertices(prods, output_path, file);
+	//extract_vertices(prods, output_path, file);
+
+	std::stringstream ss3;
+	ss3 << dir << "/Intermediate_Data/" << input_file << "_vertices_sampled";
+	std::string output_path2 = ss3.str();
+	std::cout << output_path2 << std::endl;
+
+	extract_vertices_sample(prods, output_path2, file, input_path);
+
 
 
 	return 0;
