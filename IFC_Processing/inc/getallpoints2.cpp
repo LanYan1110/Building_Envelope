@@ -32,11 +32,11 @@ void extract_vertices_sample(IfcSchema::IfcProduct::list::ptr prods, std::string
 
 		// preserve or not preserve door and window?
 		//prod->
+		//prod->data().type()->name() == "IfcOpeningElement" ||
 		if (prod->hasRepresentation())
 		{
 			if (prod->data().type()->name() == "IfcSite" ||
 				prod->data().type()->name() == "IfcStair" ||
-				prod->data().type()->name() == "IfcOpeningElement" ||
 				prod->data().type()->name() == "IfcSpace" ||
 				prod->data().type()->name() == "IfcRailing" ||
 				prod->data().type()->name() == "IfcAnnotation") {
@@ -60,11 +60,12 @@ void extract_vertices_sample(IfcSchema::IfcProduct::list::ptr prods, std::string
 				BRepTools::UVBounds(face,UMin,UMax,VMin,VMax);
 				
 
-				double U_interval = (UMax - UMin) / 5;
-				double V_interval = (VMax - VMin) / 5;
+				double U_interval = (UMax - UMin) / 20;
+				double V_interval = (VMax - VMin) / 20;
 				
 				double u = UMin; double v = VMin;
 
+				int face_count = 0;
 				while (u < UMax) {
 					v = VMin;
 					while (v < VMax) {
@@ -72,6 +73,7 @@ void extract_vertices_sample(IfcSchema::IfcProduct::list::ptr prods, std::string
 						if (brep.TestOnRestriction(p,Tol)==TopAbs_IN) {
 							gp_Pnt p = b_face.Value(u, v);
 							std::cout << p.X() << " " << p.Y() << " " << p.Z() << std::endl;
+							face_count++;
 							points.emplace_back(p);
 						}
 						v = v + V_interval;
