@@ -41,13 +41,16 @@ void extract_vertices_elke(IfcSchema::IfcProduct::list::ptr prods, std::string o
 
 	ofstream out(output, std::ofstream::out);
 
-	for (int i = 0; i < points.size(); i++) {
-		out << "Product" << i << "\n";
-		//out << points[i].size() << "\n";
-		for (int j = 0; j < points[i].size(); j++) {
-			out << points[i][j].X() <<" "<< points[i][j].Y() <<" "<< points[i][j].Z()<<"\n";
+	if (points.size() >= 4) {
+		for (int i = 0; i < points.size(); i++) {
+			out << "Product" << i << "\n";
+			//out << points[i].size() << "\n";
+			for (int j = 0; j < points[i].size(); j++) {
+				out << points[i][j].X() << " " << points[i][j].Y() << " " << points[i][j].Z() << "\n";
+			}
 		}
 	}
+
 
 	out.close();
 	return;

@@ -34,9 +34,9 @@ int main(int argc, char** argv) {
 	// Read and Parse the input IFC files
 
 	std::string dir = "C:/Users/seuya/Documents/Thesis/Building_Envelope";
-	//std::string input_file = "AC20-FZK-Haus.ifc";
+	std::string input_file = "AC20-FZK-Haus.ifc";
 	//std::string input_file = "AC20-Institute-Var-2.ifc";
-	std::string input_file ="AC-20-Smiley-West-10-Bldg.ifc";
+	//std::string input_file ="AC-20-Smiley-West-10-Bldg.ifc";
 	std::stringstream ss;
 	ss << dir <<"/RawData/"<<input_file;
 	std::string input_path = ss.str();

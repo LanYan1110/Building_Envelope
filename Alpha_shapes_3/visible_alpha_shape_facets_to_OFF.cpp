@@ -4,6 +4,9 @@
 #include <CGAL/Alpha_shape_cell_base_3.h>
 #include <CGAL/Alpha_shape_vertex_base_3.h>
 #include <CGAL/Delaunay_triangulation_3.h>
+#include <CGAL/Triangulation_data_structure_3.h>
+#include <CGAL/Triangulation_3.h>
+
 
 #include <fstream>
 #include <sstream>
@@ -25,14 +28,14 @@ typedef Alpha_shape_3::Alpha_iterator                Alpha_iterator;
 typedef Alpha_shape_3::Facet_iterator Facet_iterator;
 typedef Alpha_shape_3::Facet Facet;
 
-int main()
-{
+int main(){
     //Input Path
     std::string dir = "C:/Users/seuya/Documents/Thesis/Building_Envelope";
-    std::string input_file = "AC-20-Smiley-West-10-Bldg_elke";
+    std::string input_file = "AC20-FZK-Haus.ifc_elke";
     std::stringstream ss;
     ss << dir << "/Intermediate_Data/vertices/" << input_file;
     std::string input_path = ss.str();
+    std::cout << input_path << std::endl;
 
     std::ifstream file(input_path);
     std::string line;
@@ -52,8 +55,6 @@ int main()
     }
     products.push_back(product); // adding last product
     file.close();
-    
-    // Compute 3D alpha shape
 
     // Generate output path
     std::stringstream ss2;
@@ -62,16 +63,22 @@ int main()
     std::cout << output_path << std::endl;
 
     std::ofstream output(output_path);
+    
+    // Compute 3D alpha shapes
+    std::vector<Alpha_shape_3> alpha_shapes;
 
     std::vector< Alpha_shape_3::Facet > regular_facets;
     std::vector<Alpha_shape_3::Facet> filtered_regular_facets;
     std::unordered_map< Alpha_shape_3::Vertex_handle, std::size_t> vids;
-
+   
 
     for (auto product : products) {
+        // Compute Alpha solid for every product
         Alpha_shape_3 as(product.begin(), product.end());
         Alpha_shape_3::NT alpha_solid = as.find_alpha_solid();
         as.set_alpha(alpha_solid);
+
+        //write_alpha_shapes_to_file(as, outoff);
 
         std::cerr << "alpha_solid = " << alpha_solid << "\n";
         std::cerr << as.number_of_solid_components() << " number of solid components\n";
@@ -96,12 +103,15 @@ int main()
                     queue.push_back(back->neighbor(i));
             }
         }
-        
+
         // filter regular facets to restrict them to those adjacent to a marked cell
-        std::vector< Alpha_shape_3::Facet > regular_facets;
+        std::vector<Alpha_shape_3::Facet> filtered_regular_facets;
         as.get_alpha_shape_facets(std::back_inserter(regular_facets), Alpha_shape_3::REGULAR);
 
-        std::vector<Alpha_shape_3::Facet> filtered_regular_facets;
+        // Extract vertices and facets for every 3D alpha shape
+        std::unordered_map< Alpha_shape_3::Vertex_handle, std::size_t> vids;
+
+        // Extract visible facets from every 3D alpha shape
         for (Alpha_shape_3::Facet f : regular_facets)
         {
             if (marked_cells.count(f.first) == 1)
@@ -113,11 +123,21 @@ int main()
                     filtered_regular_facets.push_back(f);
             }
         }
-        std::unordered_map< Alpha_shape_3::Vertex_handle, std::size_t> vids;
-        
+
+        //Output to off format
+        for (const Alpha_shape_3::Facet& f : filtered_regular_facets)
+        {
+            output << 3;
+
+            for (int i = 0; i < 3; ++i)
+            {
+                Alpha_shape_3::Vertex_handle vh = f.first->vertex(as.vertex_triple_index(f.second, i));
+                output << " " << vids[vh];
+            }
+            output << "\n";
+        }
 
     }
-
 
     return 0;
-    }
+}
