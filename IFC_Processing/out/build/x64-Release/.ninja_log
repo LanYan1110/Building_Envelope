@@ -1,11 +1,16 @@
 # ninja log v5
-33	8248	6983529443665829	CMakeFiles/ifc_project.dir/main.cpp.obj	9d8aa7656ec8af67
+42	7113	6983541551211930	CMakeFiles/ifc_project.dir/main.cpp.obj	9d8aa7656ec8af67
 70	7208	6981773666433371	CMakeFiles/ifc_project.dir/inc/getallpoints2.cpp.obj	c8b235a0bd9322c9
 84	12288	6980685054375282	CMakeFiles/ifc_project.dir/inc/Individual_products.cpp.obj	51137f134ef5e0b9
 40	7710	6980775632511830	CMakeFiles/ifc_project.dir/inc/GetAllPoints.cpp.obj	cd8ee8e018005dbe
 40	7728	6983529438458069	CMakeFiles/ifc_project.dir/inc/sampler.cpp.obj	6f690a9e2956a8e3
 37	10182	6983501247672520	CMakeFiles/ifc_project.dir/inc/helper.cpp.obj	af21b7f608a37f0d
 0	15	0	clean	9992afb1f91dc381
-8249	25728	6983529611403343	ifc_project.exe	9fa677975880a6c9
-42	7113	6983541551211930	CMakeFiles/ifc_project.dir/main.cpp.obj	9d8aa7656ec8af67
 7115	25753	6983541731961060	ifc_project.exe	9fa677975880a6c9
+41	7757	6983557377442456	CMakeFiles/ifc_project.dir/inc/sampler.cpp.obj	6f690a9e2956a8e3
+33	8126	6983557381237239	CMakeFiles/ifc_project.dir/main.cpp.obj	9d8aa7656ec8af67
+8127	21105	6983557505592554	ifc_project.exe	9fa677975880a6c9
+37	6589	6983563263387252	CMakeFiles/ifc_project.dir/inc/sampler.cpp.obj	6f690a9e2956a8e3
+6591	26017	6983563452773680	ifc_project.exe	9fa677975880a6c9
+98	7258	6983566318265242	CMakeFiles/ifc_project.dir/main.cpp.obj	9d8aa7656ec8af67
+7260	22014	6983566460355276	ifc_project.exe	9fa677975880a6c9

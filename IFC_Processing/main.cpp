@@ -101,7 +101,10 @@ int main(int argc, char** argv) {
 			export_path += segments[i] + "/";
 		}
 
+		// Export path for one alpha shape model
 		export_path = export_path + "Intermediate_Data/vertices/" + segments[segments.size() - 1] + "_samples.txt";
+		// Export path for multiple alpha shape model
+		std::string export_path2= export_path + "Intermediate_Data/vertices/" + segments[segments.size() - 1] + "_indi_samples.txt";
 		std::cout << export_path << std::endl;
 
 		//std::string evaluation= export_path + segments[segments.size() - 1] + "_evaluation.csv";
@@ -111,6 +114,7 @@ int main(int argc, char** argv) {
 		//	out2.close();
 		//}
 		ifc_sampler(prods, export_path, file, input_files[i]);
+		//ifc_product_sampler(prods, export_path2, file, input_files[i]);
 
 	}
 
