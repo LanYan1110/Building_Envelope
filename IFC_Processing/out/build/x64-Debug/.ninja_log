@@ -1,0 +1,7 @@
+# ninja log v5
+2	8902	6975709493131290	CMakeFiles/ifc_project.dir/main.cpp.obj	a72c5dbe7f00a84d
+32	8959	6975709493836688	CMakeFiles/ifc_project.dir/inc/Individual_products.cpp.obj	51137f134ef5e0b9
+18	9108	6975709495473097	CMakeFiles/ifc_project.dir/inc/GetAllPoints.cpp.obj	cd8ee8e018005dbe
+26	9052	6975709494861603	CMakeFiles/ifc_project.dir/inc/getallpoints2.cpp.obj	c8b235a0bd9322c9
+11	13451	6975709538711445	CMakeFiles/ifc_project.dir/inc/helper.cpp.obj	48ee9327a6b2b439
+13452	25463	6975709653992753	ifc_project.exe	c83b2ed38c0775f9

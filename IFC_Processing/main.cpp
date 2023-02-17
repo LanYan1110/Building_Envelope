@@ -1,16 +1,16 @@
 
-#include "inc/GetAllPoints.h"
-#include "inc/GetAllPoints2.h"
-#include "inc/Individual_products.h"
-
+#include "inc/sampler.h"
 #include "inc/helper.h"
-
 
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <string>
 #include <filesystem>
+//#include <stdio>
+//#include <dirent>
+
+namespace fs = std::filesystem;
 
 // openCASCADE includes
 #include <TopoDS.hxx>
@@ -28,50 +28,92 @@
 #include <ifcgeom_schema_agnostic/kernel.h>
 #include <ifcgeom_schema_agnostic/IfcGeomIterator.h>
 
+std::vector<std::string> GetInputs() {
+
+	std::vector<std::string> inputpatharray;
+
+	std::string dir= "C:/Users/seuya/Documents/Thesis/RawData/ifc/IFC2_3/";
+	struct stat sb;
+	for (const auto& entry : fs::directory_iterator(dir)) {
+		std::filesystem::path outfilename = entry.path();
+		std::string outfilename_str = outfilename.string();
+		const char* path = outfilename_str.c_str();
+
+		if (stat(path, &sb) == 0 && !(sb.st_mode & S_IFDIR))
+			std::cout << path << std::endl;
+			inputpatharray.emplace_back(path);
+	}
+		
+	std::cout << inputpatharray.size() << std::endl;
+
+	while (true) {
+		if (inputpatharray.size()==0) {
+			std::cout << "Please enter the filepath of the IFC file" << std::endl;
+			std::cout << "[INFO] if multiple files entered, please seperate them by pressing enter!" << std::endl;
+			std::cout << "[INFO] finish by empty line + enter" << std::endl;
+
+			while (true) {
+				std::string single_input;
+				getline(std::cin, single_input);
+				
+				if (single_input.size() == 0 && inputpatharray.size() == 0) {
+					std::cout << "[INFO] No IFC files are inputted." << std::endl;
+					std::cout << "Please enter the filepath of the IFC file" << std::endl;
+					std::cout << "[INFO] if multiple files entered, please seperate them by pressing enter!" << std::endl;
+				}
+
+				else if (single_input.size() == 0) {
+					break;
+				}
+
+				inputpatharray.emplace_back(single_input);
+			}
+		}
+		else {
+			break;
+		}
+	}
+
+	bool hasError = false;
+
+	//TO-DO: check whether input data value are valid or not
+	return inputpatharray;
+}
 
 int main(int argc, char** argv) {
 
-	// Read and Parse the input IFC files
+	//input 
+	std::vector<std::string> input_files=GetInputs();
+	//std::vector<std::string> input_files;
 
-	std::string dir = "C:/Users/seuya/Documents/Thesis/Building_Envelope";
-	std::string input_file = "AC20-FZK-Haus.ifc";
-	//std::string input_file = "AC20-Institute-Var-2.ifc";
-	//std::string input_file ="AC-20-Smiley-West-10-Bldg.ifc";
-	std::stringstream ss;
-	ss << dir <<"/RawData/"<<input_file;
-	std::string input_path = ss.str();
+	for (size_t i = 0; i < input_files.size(); i++) {
+		IfcParse::IfcFile input(input_files[i]);
+		IfcParse::IfcFile* file = &input;
 
-	std::cout << input_path << std::endl;
+		// Iterate through the IfcProducts
+		IfcSchema::IfcProduct::list::ptr prods = file->instances_by_type<IfcSchema::IfcProduct>();
 
-	IfcParse::IfcFile input(input_path);
-	IfcParse::IfcFile* file = &input;
+		// sample points
+		std::vector<std::string> segments;
+		std::string export_path;
+		boost::split(segments, input_files[i], boost::is_any_of("/"));
+		for (size_t i = 0; i < segments.size() - 4; i++) {
+			export_path += segments[i] + "/";
+		}
 
-	// Different ways to extract points from IFC files
-	
-	// Iterate through the IfcProducts
-	IfcSchema::IfcProduct::list::ptr prods = file->instances_by_type<IfcSchema::IfcProduct>();
+		export_path = export_path + "Intermediate_Data/vertices/" + segments[segments.size() - 1] + "_samples.txt";
+		std::cout << export_path << std::endl;
 
-	// Not working
-	std::stringstream ss2;
-	ss2 << dir << "/Intermediate_Data/" << input_file<<"_vertices";
-	std::string output_path = ss2.str();
-	std::cout << output_path << std::endl;
-	//extract_vertices(prods, output_path, file);
+		//std::string evaluation= export_path + segments[segments.size() - 1] + "_evaluation.csv";
+		//if (i == 0) {
+		//	ofstream out2(evaluation, std::ofstream::out);
+		//	out2 << "" << "," << num_of_f << "\n";
+		//	out2.close();
+		//}
+		ifc_sampler(prods, export_path, file, input_files[i]);
 
-	// sample points
-	std::stringstream ss3;
-	ss3 << dir << "/Intermediate_Data/vertices/" << input_file << "_vertices_sampled_withopennings_20";
-	std::string output_path2 = ss3.str();
-	std::cout << output_path2 << std::endl;
+	}
 
-	//extract_vertices_sample(prods, output_path2, file, input_path);
-
-	// no sample points
-	std::stringstream ss4;
-	ss4 << dir << "/Intermediate_Data/vertices/" << input_file << "_elke";
-	std::string output_path4 = ss3.str();
-	std::cout << output_path4 << std::endl;
-	extract_vertices_elke(prods, output_path4, file, input_path);
 
 	return 0;
 

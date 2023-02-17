@@ -1,0 +1,3 @@
+C:/Users/seuya/Documents/Thesis/Building_Envelope/IFC_Processing/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
+C:/Users/seuya/Documents/Thesis/Building_Envelope/IFC_Processing/out/build/x64-Debug/CMakeFiles/ifc_project.dir
+C:/Users/seuya/Documents/Thesis/Building_Envelope/IFC_Processing/out/build/x64-Debug/CMakeFiles/edit_cache.dir

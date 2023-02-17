@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
+#SET(CMAKE_CXX_FLAGS "-std=c++0x")
+
 set( CMAKE_BUILD_TYPE "Release")
 
 # set the project name
@@ -49,7 +51,7 @@ string(REGEX REPLACE "([^;]+)" "${OpenCASCADEC_LIBRARY_DIR}/\\1.lib" OCC_LIBRARI
 add_executable(${PROJECT_NAME} 
 main.cpp
 
- "inc/GetAllPoints.cpp" "inc/GetAllPoints.h" "inc/getallpoints2.cpp" "inc/getallpoints2.h" "inc/helper.cpp" "inc/helper.h"   "inc/Individual_products.cpp")
+   "inc/sampler.cpp" "inc/sampler.h" "inc/helper.cpp" "inc/helper.h"   )
 
 foreach(LIB ${IFC_LIBRARIES})
     message(STATUS "IFC libraries are ${LIB}")
@@ -68,3 +70,5 @@ target_link_libraries(${PROJECT_NAME} ${OCC_LIBRARIES} ${IFC_LIBRARIES} ${Boost_
 
 # Adjust runtime environment
 set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_ENVIRONMENT "PATH=$<$<CONFIG:DEBUG>:${OpenCASCADE_BINARY_DIR}d>$<$<NOT:$<CONFIG:DEBUG>>:${OpenCASCADE_BINARY_DIR}>;%PATH%")
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)

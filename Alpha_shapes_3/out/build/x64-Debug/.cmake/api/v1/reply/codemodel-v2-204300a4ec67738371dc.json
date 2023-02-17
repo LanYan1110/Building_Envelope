@@ -1,0 +1,140 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.11"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Alpha_shapes_3_Examples",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_CGAL_TARGETS::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_CGAL_TARGETS-Release-f8364dc00c8349cd28e6.json",
+					"name" : "ALL_CGAL_TARGETS",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "cgal_check_build_system::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cgal_check_build_system-Release-a52fc09d4f4e26a0713c.json",
+					"name" : "cgal_check_build_system",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ex_alpha_shapes_3::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ex_alpha_shapes_3-Release-07cd7882378f15df536f.json",
+					"name" : "ex_alpha_shapes_3",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ex_alpha_shapes_exact_alpha::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ex_alpha_shapes_exact_alpha-Release-03a4161af5c55e59f3b3.json",
+					"name" : "ex_alpha_shapes_exact_alpha",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ex_alpha_shapes_with_fast_location_3::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ex_alpha_shapes_with_fast_location_3-Release-4406a2f0b5e406a42cf4.json",
+					"name" : "ex_alpha_shapes_with_fast_location_3",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ex_fixed_weighted_alpha_shapes_3::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ex_fixed_weighted_alpha_shapes_3-Release-90eb0320ef7ca397450c.json",
+					"name" : "ex_fixed_weighted_alpha_shapes_3",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ex_periodic_alpha_shapes_3::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ex_periodic_alpha_shapes_3-Release-31ee8ec530cf82b02f9f.json",
+					"name" : "ex_periodic_alpha_shapes_3",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ex_weighted_alpha_shapes_3::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ex_weighted_alpha_shapes_3-Release-49532ba2ef298f97af91.json",
+					"name" : "ex_weighted_alpha_shapes_3",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ex_weighted_periodic_alpha_shapes_3::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ex_weighted_periodic_alpha_shapes_3-Release-f061010f53bd9e330147.json",
+					"name" : "ex_weighted_periodic_alpha_shapes_3",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "visible_alpha_shape_facets_to_OFF::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-visible_alpha_shape_facets_to_OFF-Release-19b743933bb01aa71b34.json",
+					"name" : "visible_alpha_shape_facets_to_OFF",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/seuya/Documents/Thesis/Building_Envelope/Alpha_shapes_3/out/build/x64-Debug",
+		"source" : "C:/Users/seuya/Documents/Thesis/Building_Envelope/Alpha_shapes_3"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 2
+	}
+}
