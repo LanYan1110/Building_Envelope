@@ -70,7 +70,10 @@ void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out
 
 	}
 
-	ofstream out(output, std::ofstream::out);
+	//ofstream out(output, std::ofstream::out,);
+	//std::ofstream out;
+	//ofstream out(output, std::ofstream::out);
+	ofstream out(output, std::ios::out | std::ios::app);
 	int count = 0;
 	for (auto product : products) {
 		out << "Procduct" << count << "\n";

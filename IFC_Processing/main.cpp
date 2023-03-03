@@ -1,4 +1,3 @@
-
 #include "inc/sampler.h"
 #include "inc/helper.h"
 
@@ -7,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <filesystem>
+#include <chrono>
 //#include <stdio>
 //#include <dirent>
 
@@ -32,7 +32,8 @@ std::vector<std::string> GetInputs() {
 
 	std::vector<std::string> inputpatharray;
 
-	std::string dir= "C:/Users/seuya/Documents/Thesis/RawData/ifc/IFC2_3/";
+	//std::string dir= "C:/Users/seuya/Documents/Thesis/RawData/ifc/IFC2_3/";
+	std::string dir = "C:/Users/seuya/Documents/Thesis/RawData/ifc/IFC4/";
 	struct stat sb;
 	for (const auto& entry : fs::directory_iterator(dir)) {
 		std::filesystem::path outfilename = entry.path();
@@ -101,19 +102,10 @@ int main(int argc, char** argv) {
 			export_path += segments[i] + "/";
 		}
 
-		// Export path for one alpha shape model
-		export_path = export_path + "Intermediate_Data/vertices/" + segments[segments.size() - 1] + "_samples.txt";
-		// Export path for multiple alpha shape model
-		std::string export_path2= export_path + "Intermediate_Data/vertices/" + segments[segments.size() - 1] + "_indi_samples.txt";
-		std::cout << export_path << std::endl;
+		// Output path for point cloud
+		std::string export_path1 = export_path + "Intermediate_Data/vertices/whole_alpha_shapes/" + segments[segments.size() - 1] + ".xyz";
 
-		//std::string evaluation= export_path + segments[segments.size() - 1] + "_evaluation.csv";
-		//if (i == 0) {
-		//	ofstream out2(evaluation, std::ofstream::out);
-		//	out2 << "" << "," << num_of_f << "\n";
-		//	out2.close();
-		//}
-		ifc_sampler(prods, export_path, file, input_files[i]);
+		ifc_sampler(prods, export_path1, file, input_files[i]);
 		//ifc_product_sampler(prods, export_path2, file, input_files[i]);
 
 	}

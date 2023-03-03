@@ -1,4 +1,4 @@
-//#define USE_IFC4
+#define USE_IFC4
 
 #ifdef USE_IFC4
 #define IfcSchema Ifc4
@@ -28,6 +28,16 @@
 #include <BRepAdaptor_HSurface.hxx>
 #include <Hatch_Hatcher.hxx>
 #include <Adaptor3d_IsoCurve.hxx>
+#include <TCollection_AsciiString.hxx>
+#include <StlAPI_Writer.hxx>
+#include <BRep_Builder.hxx>
+#include <Poly_Triangulation.hxx>
+#include <Poly_Array1OfTriangle.hxx>
+#include <Poly_PolygonOnTriangulation.hxx>
+#include <Poly_Polygon3D.hxx>
+#include <Poly_PolygonOnTriangulation.hxx>
+#include <Poly_Triangle.hxx>
+#include <OSD_Path.hxx>
 class BRepAdaptor_HSurface;
 
 #include <ifcparse/IfcFile.h>
