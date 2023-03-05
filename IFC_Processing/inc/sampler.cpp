@@ -96,14 +96,17 @@ void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out
 }
 
 
-void ifc_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out_points, IfcParse::IfcFile* file, std::string input,std::string evaluation){
+void ifc_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out_points, 
+IfcParse::IfcFile* file, std::string input,
+int& input_v, int& input_f,int& out_v) {
 	//Description: This function samples points from the ifc file and saves them in a xyz file
 	//Parameters: prods: list of products in the ifc file
 	//			  out_points: path to the output file
 	//			  file: input ifc file
 	//			  input: path to the input ifc file
-	//			  evaluation: path to the evaluation file
-
+	//			  input_v: number of vertices in the input ifc file
+	//			  input_f: number of faces in the input ifc file
+	//			  out_v: number of vertices in the output file (to be put in the alpha shape)
 	std::vector<gp_Pnt> points;
 	IfcGeom::Kernel my_kernel(file);
 	helperCluster* hCluster = new helperCluster;
@@ -172,23 +175,17 @@ void ifc_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out_points,
 
 	}
 
-	std::cout << "Number of Vertices are: " << num_of_v << std::endl;
-	std::cout << "Number of faces are: " << num_of_f << std::endl;
+	input_v = num_of_v;
+	input_f = num_of_f;
+	out_v=points.size();
 
 	//Output the generated point cloud to the IFC file
 	ofstream out(out_points, std::ofstream::out);
-	out << points.size() << "\n";
+	//out << points.size() << "\n";
 	for (int i = 0; i < points.size(); i++) {
 		out << points[i].X() << " " << points[i].Y() << " " << points[i].Z() << "\n";
 	}
 	out.close();
-
-	// Output the number of vertices and faces to the evaluation csv file
-	ofstream out2(evaluation, std::ofstream::out);
-	size_t index_of_slash = input.find_last_of("/\\");
-    std::string file_name = input.substr(index_of_slash + 1);
-	out2 <<file_name<<","<<num_of_v <<","<< num_of_f<<"\n";
-	out2.close();
 
 	return;
 }

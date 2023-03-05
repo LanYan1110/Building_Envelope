@@ -85,31 +85,81 @@ int main(int argc, char** argv) {
 
 	//input 
 	std::vector<std::string> input_files=GetInputs();
-	//std::vector<std::string> input_files;
+
+	// Output root directory
+	std::vector<std::string> segments;
+	std::string root_dir;
+	boost::split(segments, input_files[0], boost::is_any_of("/"));
+
+	for (size_t i = 0; i < segments.size() - 4; i++) {
+		root_dir += segments[i] + "/";
+	}
+
+	std::cout<<root_dir<<std::endl;
+	segments.clear();
+
+	// Output path for evaluation matrix
+	std::string evaluation= root_dir +"Intermediate_Data/evaluation/evaluation.csv";
+	// Open evaluation file and write header line for the csv file
+	std::ofstream evaluation_file;
+	evaluation_file.open(evaluation);
+	evaluation_file<<"file_name"<<","<<"Input_Vertices"<<","<<"Input_Faces"<<
+	","<<"Generation_time_of_point_cloud"<<
+	","<<"Pointcloud_points"<<"\n";
+	evaluation_file.close();
+
+	// Vectors that store evaluation indictors
+	std::vector<int> input_vertices;
+	std::vector<int> input_faces;
+	std::vector<int> output_vertices;
+	std::vector<double> generation_time;
+	std::vector<std::string> file_names;
 
 	for (size_t i = 0; i < input_files.size(); i++) {
 		IfcParse::IfcFile input(input_files[i]);
 		IfcParse::IfcFile* file = &input;
-
-		// Iterate through the IfcProducts
-		IfcSchema::IfcProduct::list::ptr prods = file->instances_by_type<IfcSchema::IfcProduct>();
-
-		// sample points
-		std::vector<std::string> segments;
-		std::string export_path;
-		boost::split(segments, input_files[i], boost::is_any_of("/"));
-		for (size_t i = 0; i < segments.size() - 4; i++) {
-			export_path += segments[i] + "/";
-		}
+		int current_v = 0;int current_f = 0;int cur_out_v = 0;
 
 		// Output path for point cloud
-		std::string export_path1 = export_path + "Intermediate_Data/vertices/whole_alpha_shapes/" + segments[segments.size() - 1] + ".xyz";
+		boost::split(segments, input_files[i], boost::is_any_of("/"));
+		std::string export_path = root_dir + "Intermediate_Data/vertices/whole_alpha_shapes/" + segments[segments.size() - 1] + ".xyz";
+		std::cout << export_path << std::endl;
 
-		ifc_sampler(prods, export_path1, file, input_files[i]);
+		// Iterate through the IfcProducts, sample point clouds from each product, and export to .xyz file
+		IfcSchema::IfcProduct::list::ptr prods = file->instances_by_type<IfcSchema::IfcProduct>();
+		
+		auto start = std::chrono::high_resolution_clock::now();
+		ifc_sampler(prods, export_path, file, input_files[i],current_v,current_f,cur_out_v);
+		auto stop = std::chrono::high_resolution_clock::now();
+		auto elapsed_time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+		auto duration = elapsed_time.count()/ 1000000;
+		std::cout << "Elapsed time: " << duration << " seconds" << std::endl;
+
+		//Push back the evaluation indicators to the vectors
+		input_vertices.push_back(current_v);
+		input_faces.push_back(current_f);
+		generation_time.push_back(duration);
+		file_names.push_back(segments[segments.size() - 1]);
+		output_vertices.push_back(cur_out_v);
+
+		// Output the elapsed time to the evaluation file
+		//evaluation_file.open(evaluation, std::ios_base::app);
 		//ifc_product_sampler(prods, export_path2, file, input_files[i]);
 
 	}
 
+	// print input vertices and faces
+	for (size_t i = 0; i < input_vertices.size(); i++) {
+		std::cout << input_vertices[i] << std::endl;
+		std::cout << input_faces[i] << std::endl;
+	}
+
+	// output evaluation indicators to the evaluation file
+	evaluation_file.open(evaluation, std::ios_base::app);
+	for (size_t i = 0; i < input_vertices.size(); i++) {
+		evaluation_file << file_names[i] << "," << input_vertices[i] << ","
+		 << input_faces[i] << "," << generation_time[i] << "," << output_vertices[i] << "\n";
+	}
 
 	return 0;
 
