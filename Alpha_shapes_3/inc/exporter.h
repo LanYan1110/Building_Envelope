@@ -45,4 +45,4 @@ typedef Gt::Point_3                                  Point;
 typedef Alpha_shape_3::Alpha_iterator                Alpha_iterator;
 
 // Exporter
-void alpha_shape_exporter(Alpha_shape_3 as,std::string output_path);
+void alpha_shape_exporter(Alpha_shape_3 as,std::vector<Point> points,std::string output_path);

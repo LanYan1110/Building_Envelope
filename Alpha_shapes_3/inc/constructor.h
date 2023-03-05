@@ -44,4 +44,4 @@ typedef CGAL::Alpha_shape_3<Triangulation_3>         Alpha_shape_3;
 typedef Gt::Point_3                                  Point;
 typedef Alpha_shape_3::Alpha_iterator                Alpha_iterator;
 
-Alpha_shape_3 alpha_shape_constructor(std::string input_path);
+void alpha_shape_constructor(std::vector<Point_3> points,Alpha_shape_3& as);

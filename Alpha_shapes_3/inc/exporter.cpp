@@ -1,6 +1,6 @@
 #include "exporter.h"
 
-void alpha_shape_exporter(Alpha_shape_3 as,std::string output_path) {
+void alpha_shape_exporter(Alpha_shape_3 as,std::vector<Point> points,std::string output_path) {
     //function to export alpha shape to .obj file
     //input: alpha shape, path to output file
     //return: none
@@ -54,21 +54,6 @@ void alpha_shape_exporter(Alpha_shape_3 as,std::string output_path) {
             if (vids.insert(std::make_pair(vh, points.size())).second)
                 points.push_back(vh->point());
         }
-    }
-
-    std::ofstream output(output_path);
-    output << "OFF\n " << points.size() << " " << filtered_regular_facets.size() << " 0\n";
-    std::copy(points.begin(), points.end(), std::ostream_iterator<Point>(output, "\n"));
-    for (const Alpha_shape_3::Facet& f : filtered_regular_facets)
-    {
-        output << 3;
-
-        for (int i = 0; i < 3; ++i)
-        {
-            Alpha_shape_3::Vertex_handle vh = f.first->vertex(as.vertex_triple_index(f.second, i));
-            output << " " << vids[vh];
-        }
-        output << "\n";
     }
 
     // Output the alpha shape in OBJ format

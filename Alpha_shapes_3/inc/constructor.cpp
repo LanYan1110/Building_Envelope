@@ -1,23 +1,11 @@
 #include "constructor.h"
 
-Alpha_shape_3 alpha_shape_constructor(std::string input_path) {
+void alpha_shape_constructor(std::vector<Point_3> points,Alpha_shape_3& as) {
     
     //function to construct alpha shape from a point cannot overload functions distinguished by return type aloncloud
-    //input: path to point cloud
-    //return: alpha shape
-
-    std::vector<Point> points;
-    std::ifstream is(input_path);
-
-    // read points from file
-    int n;
-    is >> n;
-    double x, y, z;
-    for (int i = 0; i < n; ++i)
-    {
-        is >> x >> y >> z;
-        points.push_back(Point(x, y, z));
-    }
+    //input: point cloud
+    //input: alpha shape to be constructed
+    //output: None
 
     std::cerr << points.size() << " points read.\n";
 
@@ -29,6 +17,11 @@ Alpha_shape_3 alpha_shape_constructor(std::string input_path) {
     std::cerr << "alpha_solid = " << alpha_solid << "\n";
     std::cerr << as.number_of_solid_components() << " number of solid components\n";
 
-    return as;
+    if (as.number_of_solid_components() == 0) {
+    std::cerr << "Error: alpha shape has no solid components" << std::endl;
+    exit(1);
+    }
+
+    return;
 
 }

@@ -91,12 +91,33 @@ int main()
 		std::string export_path = root_dir + "Intermediate_Data/OFF" + segments[segments.size() - 1] + ".xyz";
         std::cout << export_path << std::endl;
 
+		// Read point cloud from file
+
+		std::vector<Point> points;
+		std::ifstream is(input_path);
+		if (!is.is_open()) {
+		std::cerr << "Error: could not open file " << input_path << std::endl;
+		exit(1);
+		}
+
+		// read points from file
+		int n;
+		is >> n;
+		double x, y, z;
+		for (int i = 0; i < n; ++i)
+		{
+			is >> x >> y >> z;
+			points.push_back(Point(x, y, z));
+		}
+
         // Construct alpha shape
-        Alpha_shape_3 as=alpha_shape_constructor(input_files1[i]);
+		Alpha_shape_3& as;
+        alpha_shape_constructor(points,as);
         // Simplify alpha shape
-        Alpha_shape_3 as_simplified=alpha_shape_simplifier(as);
+		//Alpha_shape_3& as_simplified;
+        //alpha_shape_simplifier(as,as_simplified);
         // Export alpha shape
-        alpha_shape_exporter(as_simplified, export_path);
+        alpha_shape_exporter(as,points,export_path);
 
 
     }

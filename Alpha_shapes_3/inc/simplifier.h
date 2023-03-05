@@ -44,4 +44,4 @@ typedef CGAL::Alpha_shape_3<Triangulation_3>         Alpha_shape_3;
 typedef Gt::Point_3                                  Point;
 typedef Alpha_shape_3::Alpha_iterator                Alpha_iterator;
 
-Alpha_shape_3 alpha_shape_simplifier(Alpha_shape_3 as);
+void alpha_shape_simplifier(Alpha_shape_3 as,Alpha_shape_3& as_simplified);
