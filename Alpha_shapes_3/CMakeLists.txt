@@ -18,7 +18,8 @@ file(
   ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
 
-add_executable(${PROJECT_NAME} visible_alpha_shape_facets_to_OFF.cpp)
+add_executable(${PROJECT_NAME} main.cpp 
+inc/constructor.cpp inc/exporter.cpp inc/simplifier.cpp)
 
 target_link_libraries(${PROJECT_NAME} CGAL::CGAL ${Boost_LIBRARIES})
 
@@ -29,4 +30,3 @@ foreach(cppfile ${cppfiles})
 endforeach()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
-
