@@ -8,8 +8,12 @@ project(Alpha_shapes_3)
 
 find_package(CGAL REQUIRED)
 
+set(BCRYPT_LIBRARIES "bcrypt.lib")
+
 set(Boost_INCLUDE_DIR "C:/Users/seuya/Documents/Thesis/IfcOpenshell/_deps/boost_1_74_0")
 set(Boost_LIBRARY_DIR "C:/Users/seuya/Documents/Thesis/IfcOpenshell/_deps/boost_1_74_0/stage/lib")
+
+include_directories(${Boost_INCLUDE_DIR})
 
 # create a target per cppfile
 file(

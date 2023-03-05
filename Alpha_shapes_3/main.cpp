@@ -111,14 +111,13 @@ int main()
 		}
 
         // Construct alpha shape
-		Alpha_shape_3& as;
-        alpha_shape_constructor(points,as);
+		//Alpha_shape_3 as;
+        alpha_shape_constructor(points);
         // Simplify alpha shape
 		//Alpha_shape_3& as_simplified;
         //alpha_shape_simplifier(as,as_simplified);
         // Export alpha shape
-        alpha_shape_exporter(as,points,export_path);
-
+        //alpha_shape_exporter(as,points,export_path);
 
     }
 

@@ -1,6 +1,6 @@
 #include "constructor.h"
 
-void alpha_shape_constructor(std::vector<Point_3> points,Alpha_shape_3& as) {
+void alpha_shape_constructor(std::vector<Point> points) {
     
     //function to construct alpha shape from a point cannot overload functions distinguished by return type aloncloud
     //input: point cloud
@@ -21,6 +21,8 @@ void alpha_shape_constructor(std::vector<Point_3> points,Alpha_shape_3& as) {
     std::cerr << "Error: alpha shape has no solid components" << std::endl;
     exit(1);
     }
+
+
 
     return;
 
