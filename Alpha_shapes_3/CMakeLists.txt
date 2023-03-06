@@ -23,7 +23,7 @@ file(
 
 
 add_executable(${PROJECT_NAME} main.cpp 
-inc/constructor.cpp inc/exporter.cpp inc/simplifier.cpp)
+inc/constructor.cpp inc/off_to_obj_coverter.cpp)
 
 target_link_libraries(${PROJECT_NAME} CGAL::CGAL ${Boost_LIBRARIES})
 

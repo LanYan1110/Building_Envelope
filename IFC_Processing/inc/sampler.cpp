@@ -181,7 +181,7 @@ int& input_v, int& input_f,int& out_v) {
 
 	//Output the generated point cloud to the IFC file
 	ofstream out(out_points, std::ofstream::out);
-	//out << points.size() << "\n";
+	out << points.size() << "\n";
 	for (int i = 0; i < points.size(); i++) {
 		out << points[i].X() << " " << points[i].Y() << " " << points[i].Z() << "\n";
 	}

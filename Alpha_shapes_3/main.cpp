@@ -1,6 +1,5 @@
 #include "inc/constructor.h"
-#include "inc/simplifier.h"
-#include "inc/exporter.h"
+#include "inc/off_to_obj_converter.h"
 
 #include <fstream>
 #include <sstream>
@@ -11,115 +10,49 @@
 #include <filesystem>
 #include <vector>
 
-#include <boost/log/core.hpp>
+std::string clear_slash(std::string const& path_of_file, std::string const& d_slash = "/\\")
+{
+    size_t index_of_slash = path_of_file.find_last_of(d_slash);
+    std::string file_name = path_of_file.substr(index_of_slash + 1);
+    return file_name;
+}
 
-std::vector<std::string> GetInputs() {
+std::vector<std::string> GetInputs(std::string dir) {
 
-	std::vector<std::string> inputpatharray;
+    std::vector<std::string> inputpatharray;
 
-	std::string dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/vertices/whole_alpha_shapes/";
-	struct stat sb;
-	for (const auto& entry : fs::directory_iterator(dir)) {
-		std::filesystem::path outfilename = entry.path();
-		std::string outfilename_str = outfilename.string();
-		const char* path = outfilename_str.c_str();
+    struct stat sb;
+    for (const auto& entry : fs::directory_iterator(dir)) {
+        std::filesystem::path outfilename = entry.path();
+        std::string outfilename_str = outfilename.string();
+        const char* path = outfilename_str.c_str();
 
-		if (stat(path, &sb) == 0 && !(sb.st_mode & S_IFDIR))
-			std::cout << path << std::endl;
-			inputpatharray.emplace_back(path);
-	}
-		
-	std::cout << inputpatharray.size() << std::endl;
+        if (stat(path, &sb) == 0 && !(sb.st_mode & S_IFDIR))
+            std::cout << path << std::endl;
+        inputpatharray.emplace_back(path);
+    }
 
-	while (true) {
-		if (inputpatharray.size()==0) {
-			std::cout << "Please enter the filepath of the IFC file" << std::endl;
-			std::cout << "[INFO] if multiple files entered, please seperate them by pressing enter!" << std::endl;
-			std::cout << "[INFO] finish by empty line + enter" << std::endl;
+    return inputpatharray;
 
-			while (true) {
-				std::string single_input;
-				getline(std::cin, single_input);
-				
-				if (single_input.size() == 0 && inputpatharray.size() == 0) {
-					std::cout << "[INFO] No IFC files are inputted." << std::endl;
-					std::cout << "Please enter the filepath of the IFC file" << std::endl;
-					std::cout << "[INFO] if multiple files entered, please seperate them by pressing enter!" << std::endl;
-				}
-
-				else if (single_input.size() == 0) {
-					break;
-				}
-
-				inputpatharray.emplace_back(single_input);
-			}
-		}
-		else {
-			break;
-		}
-	}
-
-	bool hasError = false;
-
-	return inputpatharray;
 }
 
 
 int main()
 {
     
-    // Read point cloud from file
-	//input 
-	std::vector<std::string> input_file_array=GetInputs();
-
-	std::vector<std::string> segments;
-	std::string root_dir;
-	boost::split(segments, input_file_array[0], boost::is_any_of("/"));
-
-	for (size_t i = 0; i < segments.size() - 4; i++) {
-		root_dir += segments[i] + "/";
-	}
-
-	std::cout<<root_dir<<std::endl;
-	segments.clear();
-    
-
-    for (size_t i = 0; i < input_file_array.size(); i++) {
-
+    // Read point cloud files
+    std::string whole_dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/vertices/whole_alpha_shapes/";
+    std::vector<std::string> input_files1 = GetInputs(whole_dir);
+	
+    for (size_t i = 0; i < input_files1.size(); i++) {
         // Export path for one alpha shape model
-        boost::split(segments, input_file_array[i], boost::is_any_of("/"));
-		std::string export_path = root_dir + "Intermediate_Data/OFF" + segments[segments.size() - 1] + ".xyz";
-        std::cout << export_path << std::endl;
-
-		// Read point cloud from file
-
-		std::vector<Point> points;
-		std::ifstream is(input_path);
-		if (!is.is_open()) {
-		std::cerr << "Error: could not open file " << input_path << std::endl;
-		exit(1);
-		}
-
-		// read points from file
-		int n;
-		is >> n;
-		double x, y, z;
-		for (int i = 0; i < n; ++i)
-		{
-			is >> x >> y >> z;
-			points.push_back(Point(x, y, z));
-		}
-
-        // Construct alpha shape
-		//Alpha_shape_3 as;
-        alpha_shape_constructor(points);
-        // Simplify alpha shape
-		//Alpha_shape_3& as_simplified;
-        //alpha_shape_simplifier(as,as_simplified);
-        // Export alpha shape
-        //alpha_shape_exporter(as,points,export_path);
-
+        std::string export_off = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OFF/" + clear_slash(input_files1[i])+ ".off";
+        std::cout << export_off << std::endl;
+        std::cout <<input_files1[i] << std::endl;
+        alpha_shape_constructor(input_files1[i],export_off);
+        std::string export_obj = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/" + clear_slash(input_files1[i]) + ".obj";
+        off_to_obj(export_off, export_obj);
     }
-
+    
     return 0;
 }
