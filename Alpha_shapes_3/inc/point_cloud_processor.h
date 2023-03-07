@@ -23,6 +23,7 @@
 #include <string>
 #include <filesystem>
 #include <vector>
+namespace fs = std::filesystem;
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel Gt;
 
@@ -35,4 +36,6 @@ typedef CGAL::Alpha_shape_3<Triangulation_3>         Alpha_shape_3;
 typedef Gt::Point_3                                  Point;
 typedef Alpha_shape_3::Alpha_iterator                Alpha_iterator;
 
-void random_simplify(std::string input_path,std::string output_path);
+
+std::string clear_slash(std::string const& path_of_file, std::string const& d_slash = "/\\");
+void random_simplify(std::string input_path,std::string output_dir);

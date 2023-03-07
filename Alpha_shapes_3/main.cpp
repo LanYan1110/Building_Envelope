@@ -11,11 +11,7 @@
 #include <filesystem>
 #include <vector>
 
-std::string clear_slash(std::string const& path_of_file, std::string const& d_slash = "/\\"){
-    size_t index_of_slash = path_of_file.find_last_of(d_slash);
-    std::string file_name = path_of_file.substr(index_of_slash + 1);
-    return file_name;
-}
+
 
 std::vector<std::string> GetInputs(std::string dir) {
 
@@ -48,9 +44,7 @@ int main()
     std::string processed_dir1 = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/random_simplify/";
 
     for (size_t i = 0; i < input_files1.size(); i++) {
-        std::string export_path =processed_dir1 + clear_slash(input_files1[i])+ ".xyz";
-        std::cout << export_path << std::endl;
-        random_simplify(input_files1[i], export_path);
+        random_simplify(input_files1[i], processed_dir1);
     }
 
     // for (size_t i = 0; i < input_files1.size(); i++) {
