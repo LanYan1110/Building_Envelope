@@ -39,3 +39,4 @@ typedef Alpha_shape_3::Alpha_iterator                Alpha_iterator;
 
 std::string clear_slash(std::string const& path_of_file, std::string const& d_slash = "/\\");
 void random_simplify(std::string input_path,std::string output_dir);
+void grid_simplify(std::string input_path,std::string output_dir);

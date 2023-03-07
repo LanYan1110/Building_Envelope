@@ -41,11 +41,23 @@ int main()
     std::vector<std::string> input_files1 = GetInputs(whole_dir);
 
     // Process point cloud files
+    // random simplify
     std::string processed_dir1 = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/random_simplify/";
-
     for (size_t i = 0; i < input_files1.size(); i++) {
-        random_simplify(input_files1[i], processed_dir1);
+        //random_simplify(input_files1[i], processed_dir1);
     }
+
+    // grid simplify
+    std::string processed_dir2 = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/grid_simplify/";
+    for (size_t i = 0; i < input_files1.size(); i++) {
+        grid_simplify(input_files1[i], processed_dir2);
+    }
+
+    //Hierachy_simplify_point_set
+    std::string processed_dir3 = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/hierachy_simplify/";
+
+    //Wlop_simplify_and_regularize_point_set
+    std::string processed_dir4 = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/wlop_simplify/";
 
     // for (size_t i = 0; i < input_files1.size(); i++) {
     //     // Export path for one alpha shape model. .off format
