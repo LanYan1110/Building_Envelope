@@ -24,11 +24,6 @@
 #include <filesystem>
 #include <vector>
 
-namespace fs = std::filesystem;
-
-#include <unordered_set>
-#include <unordered_map>
-
 typedef CGAL::Exact_predicates_inexact_constructions_kernel Gt;
 
 typedef CGAL::Alpha_shape_vertex_base_3<Gt>          Vb;
@@ -40,5 +35,4 @@ typedef CGAL::Alpha_shape_3<Triangulation_3>         Alpha_shape_3;
 typedef Gt::Point_3                                  Point;
 typedef Alpha_shape_3::Alpha_iterator                Alpha_iterator;
 
-
-void alpha_shape_constructor(std::string input_path,std::string output_path);
+void random_simplify(std::string input_path,std::string output_path);

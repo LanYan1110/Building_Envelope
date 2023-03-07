@@ -1,2 +1,0 @@
-C:/Users/seuya/Documents/Thesis/Building_Envelope/IFC_Processing/build/CMakeFiles/CMakeScratch/TryCompile-0hf3k7/CMakeFiles/cmTC_423ba.dir
-C:/Users/seuya/Documents/Thesis/Building_Envelope/IFC_Processing/build/CMakeFiles/CMakeScratch/TryCompile-0hf3k7/CMakeFiles/ALL_BUILD.dir

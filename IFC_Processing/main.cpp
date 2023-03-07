@@ -122,7 +122,8 @@ int main(int argc, char** argv) {
 
 		// Output path for point cloud
 		boost::split(segments, input_files[i], boost::is_any_of("/"));
-		std::string export_path = root_dir + "Intermediate_Data/vertices/whole_alpha_shapes/" + segments[segments.size() - 1] + ".xyz";
+
+		std::string export_path = root_dir + "Intermediate_Data/Raw_point_cloud/whole_alpha_shapes/" + segments[segments.size() - 1] + "r_p.xyz";
 		std::cout << export_path << std::endl;
 
 		// Iterate through the IfcProducts, sample point clouds from each product, and export to .xyz file

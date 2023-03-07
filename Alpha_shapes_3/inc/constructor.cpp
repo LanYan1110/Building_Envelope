@@ -28,23 +28,6 @@ void alpha_shape_constructor(std::string input_path,std::string output_path) {
 
     std::cerr <<"Number of input points"<<points.size() << ".\n";
 
-    // Simplification: CGAL point set processing
-    // grid_simplify_point_set
-    double cell_size = 0.1;
-    unsigned int min_points_per_cell = 3;
-    auto iterator_to_first_to_remove
-    = CGAL::grid_simplify_point_set
-    (points, cell_size,
-        CGAL::parameters::min_points_per_cell(min_points_per_cell)); // optional
-    points.erase(iterator_to_first_to_remove, points.end());
-    // Optional: after erase(), shrink_to_fit to trim excess capacity
-    points.shrink_to_fit();
-
-    std::cerr << "Number of points after simplification: " << points.size() << ".\n";
-
-    double percentage = ((double)input_size-(double)points.size()) / (double)input_size;
-    std::cerr << "Percentage of points kept: " << percentage << ".\n";
-
     // compute alpha shape
     Alpha_shape_3 as(points.begin(), points.end());
     Alpha_shape_3::NT alpha_solid = as.find_alpha_solid();
@@ -125,8 +108,6 @@ void alpha_shape_constructor(std::string input_path,std::string output_path) {
         output << "\n";
     }
     
-
-
     return;
 
 }
