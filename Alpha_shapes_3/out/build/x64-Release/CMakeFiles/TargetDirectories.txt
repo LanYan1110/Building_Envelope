@@ -1,3 +1,0 @@
-C:/Users/seuya/Documents/Thesis/Building_Envelope/Alpha_shapes_3/out/build/x64-Release/CMakeFiles/edit_cache.dir
-C:/Users/seuya/Documents/Thesis/Building_Envelope/Alpha_shapes_3/out/build/x64-Release/CMakeFiles/Alpha_shapes_3.dir
-C:/Users/seuya/Documents/Thesis/Building_Envelope/Alpha_shapes_3/out/build/x64-Release/CMakeFiles/rebuild_cache.dir

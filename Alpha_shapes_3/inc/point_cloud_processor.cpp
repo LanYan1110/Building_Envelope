@@ -67,7 +67,6 @@ void random_simplify(std::string input_path,std::string output_dir) {
     }
 }
 
-
 void grid_simplify(std::string input_path,std::string output_dir) {
     //function to simplify point cloud using grid_simplify_point_set
     //input: point cloud, .XYZ file
@@ -130,3 +129,61 @@ void grid_simplify(std::string input_path,std::string output_dir) {
     
     }
 }
+
+void hierachy_simplify(std::string input_path,std::string output_dir) {
+    //function to simplify point cloud using grid_simplify_point_set
+    //input: point cloud, .XYZ file
+    //input: output directory for processed point cloud, .XYZ file
+    //return: none
+
+    std::vector<Point> points;
+    std::ifstream is(input_path);
+    if (!is.is_open()) {
+    std::cerr << "Error: could not open file " << input_path << std::endl;
+    exit(1);
+    }
+
+    // read points from file
+    int n;
+    is >> n;
+    double x, y, z;
+    for (int i = 0; i < n; ++i)
+    {
+        is >> x >> y >> z;
+        points.push_back(Point(x, y, z));
+    }
+    int input_size = points.size();
+
+    // Simplification: hierachy_simplify
+
+    CGAL::Timer task_timer; task_timer.start();
+    // simplification by clustering using erase-remove idiom
+    points.erase(CGAL::hierarchy_simplify_point_set(points,
+                                                    CGAL::parameters::size(100)// Max cluster size
+                                                                    .maximum_variation(0.01)), // Max surface variation
+                points.end());
+    std::size_t memory = CGAL::Memory_sizer().virtual_size();
+    std::cout << points.size () << " point(s) kept, computed in "
+                << task_timer.time() << " seconds, "
+                << (memory>>20) << " Mib allocated." << std::endl;
+
+        // Export path for simplified point cloud
+        std::string export_path = output_dir + clear_slash(input_path) + "_hierichy_simplify_" + ".xyz";
+        std::ofstream os(export_path);
+        if (!os.is_open()) {
+            std::cerr << "Error: could not open file " << export_path << std::endl;
+            exit(1);
+        }
+
+        os << points.size() << std::endl;
+        for (int j = 0; j < points.size(); ++j){
+            os << points[j].x() << " " << points[j].y() << " " << points[j].z() << std::endl;
+        }
+        
+        os.close();
+
+        std::cerr << "Number of output points" << points.size() << ".\n";
+        std::cerr << "Percentage of points removed" << (input_size - points.size()) / (double)input_size << ".\n";
+    
+}
+

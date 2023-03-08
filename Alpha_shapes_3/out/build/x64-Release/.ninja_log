@@ -1,6 +1,0 @@
-# ninja log v5
-6	819	6999079813678386	CMakeFiles/Alpha_shapes_3.dir/inc/off_to_obj_coverter.cpp.obj	a4ae66002874b548
-1	5151	6999079856835684	CMakeFiles/Alpha_shapes_3.dir/main.cpp.obj	3f8778e85795c9e9
-11	5334	6999079858705720	CMakeFiles/Alpha_shapes_3.dir/inc/point_cloud_processor.cpp.obj	9f56e918dadc18bf
-15	6898	6999079874289250	CMakeFiles/Alpha_shapes_3.dir/inc/constructor.cpp.obj	96c24c6aa2cdcee1
-6899	7528	6999079876486151	Alpha_shapes_3.exe	7ff25eae8899c4e6

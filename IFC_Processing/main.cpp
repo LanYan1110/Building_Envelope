@@ -32,8 +32,8 @@ std::vector<std::string> GetInputs() {
 
 	std::vector<std::string> inputpatharray;
 
-	//std::string dir= "C:/Users/seuya/Documents/Thesis/RawData/ifc/IFC2_3/";
-	std::string dir = "C:/Users/seuya/Documents/Thesis/RawData/ifc/IFC4/";
+	std::string dir= "C:/Users/seuya/Documents/Thesis/RawData/ifc/IFC2_3/";
+	//std::string dir = "C:/Users/seuya/Documents/Thesis/RawData/ifc/IFC4/";
 	struct stat sb;
 	for (const auto& entry : fs::directory_iterator(dir)) {
 		std::filesystem::path outfilename = entry.path();

@@ -1,4 +1,4 @@
-#define USE_IFC4
+//#define USE_IFC4
 
 #ifdef USE_IFC4
 #define IfcSchema Ifc4
@@ -38,6 +38,8 @@
 #include <Poly_PolygonOnTriangulation.hxx>
 #include <Poly_Triangle.hxx>
 #include <OSD_Path.hxx>
+#include <GeomAPI_ProjectPointOnSurf.hxx>
+#include <Geom_Surface.hxx>
 class BRepAdaptor_HSurface;
 
 #include <ifcparse/IfcFile.h>
@@ -48,7 +50,7 @@ class BRepAdaptor_HSurface;
 
 
 // Function that extract all vertices from an Ifc File
-void ifc_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string output, IfcParse::IfcFile* file, std::string input);
+void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string output, IfcParse::IfcFile* file, std::string input);
 void ifc_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out_points, 
 IfcParse::IfcFile* file, std::string input,
 int& input_v, int& input_f,int& out_v);

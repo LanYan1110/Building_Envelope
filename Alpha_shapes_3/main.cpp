@@ -55,19 +55,21 @@ int main()
 
     //Hierachy_simplify_point_set
     std::string processed_dir3 = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/hierachy_simplify/";
-
+    for (size_t i = 0; i < input_files1.size(); i++) {
+        //grid_simplify(input_files1[i], processed_dir2);
+    }
     //Wlop_simplify_and_regularize_point_set
     std::string processed_dir4 = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/wlop_simplify/";
 
-    // for (size_t i = 0; i < input_files1.size(); i++) {
-    //     // Export path for one alpha shape model. .off format
-    //     std::string export_off = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OFF/" + clear_slash(input_files1[i])+ ".off";
-    //     std::cout << export_off << std::endl;
-    //     std::cout <<input_files1[i] << std::endl;
-    //     alpha_shape_constructor(input_files1[i],export_off);
-    //     std::string export_obj = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/" + clear_slash(input_files1[i]) + ".obj";
-    //     off_to_obj(export_off, export_obj);
-    // }
+
+    for (size_t i = 0; i < processed_dir2.size(); i++) {
+        // Export path for one alpha shape model. .off format
+        std::string export_path = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OFF/" + clear_slash(input_files1[i])+ ".off";
+        std::cout <<input_files1[i] << std::endl;
+        alpha_shape_constructor(input_files1[i],export_path);
+        std::string export_obj = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/" + clear_slash(input_files1[i]) + ".obj";
+        off_to_obj(export_path, export_obj);
+    }
     
     return 0;
 }

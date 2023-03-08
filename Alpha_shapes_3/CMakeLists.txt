@@ -23,7 +23,8 @@ file(
 
 
 add_executable(${PROJECT_NAME} main.cpp 
-inc/constructor.cpp inc/off_to_obj_coverter.cpp inc/point_cloud_processor.cpp)
+inc/constructor.cpp inc/off_to_obj_coverter.cpp inc/point_cloud_processor.cpp
+inc/obj_sampler.cpp)
 
 target_link_libraries(${PROJECT_NAME} CGAL::CGAL ${Boost_LIBRARIES})
 

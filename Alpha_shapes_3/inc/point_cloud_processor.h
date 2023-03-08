@@ -15,6 +15,12 @@
 #include <CGAL/IO/read_points.h>
 #include <CGAL/IO/OBJ.h>
 
+#include <CGAL/IO/read_points.h>
+#include <CGAL/IO/write_points.h>
+#include <CGAL/hierarchy_simplify_point_set.h>
+#include <CGAL/Memory_sizer.h>
+#include <CGAL/Timer.h>
+
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -40,3 +46,4 @@ typedef Alpha_shape_3::Alpha_iterator                Alpha_iterator;
 std::string clear_slash(std::string const& path_of_file, std::string const& d_slash = "/\\");
 void random_simplify(std::string input_path,std::string output_dir);
 void grid_simplify(std::string input_path,std::string output_dir);
+void hierachy_simplify(std::string input_path,std::string output_dir);

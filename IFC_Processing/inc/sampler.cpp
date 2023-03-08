@@ -18,6 +18,7 @@ void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out
 				prod->data().type()->name() == "IfcStair" ||
 				prod->data().type()->name() == "IfcSpace" ||
 				prod->data().type()->name() == "IfcRailing" ||
+				prod->data().type()->name() == "IfcBuildingProxy" ||
 				prod->data().type()->name() == "IfcAnnotation") {
 				continue;
 			}
@@ -124,6 +125,7 @@ int& input_v, int& input_f,int& out_v) {
 				prod->data().type()->name() == "IfcStair" ||
 				prod->data().type()->name() == "IfcSpace" ||
 				prod->data().type()->name() == "IfcRailing" ||
+				prod->data().type()->name() == "IfcBuildingElementProxy" ||
 				prod->data().type()->name() == "IfcAnnotation") {
 				continue;
 			}
@@ -141,6 +143,7 @@ int& input_v, int& input_f,int& out_v) {
 
 			for (expl_v.Init(shape, TopAbs_FACE); expl_v.More(); expl_v.Next())
 			{
+				// std::vector<gp_Pnt> product; // vector of points for each product
 				TopoDS_Face face = TopoDS::Face(expl_v.Current());
 				num_of_f++;
 				//From TopoDS Face to brep structure
@@ -161,6 +164,8 @@ int& input_v, int& input_f,int& out_v) {
 							gp_Pnt p = b_face.Value(u, v);
 							//std::cout << p.X() << " " << p.Y() << " " << p.Z() << std::endl;
 							points.emplace_back(p);
+							//product.emplace_back(p);
+							GeomAPI_ProjectPointOnSurf proj(p, b_face); 
 							i++;
 
 						}

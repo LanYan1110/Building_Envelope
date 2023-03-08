@@ -97,16 +97,18 @@ void alpha_shape_constructor(std::string input_path,std::string output_path) {
     std::ofstream output(output_path);
     output << "OFF\n " << points.size() << " " << filtered_regular_facets.size() << " 0\n";
     std::copy(points.begin(), points.end(), std::ostream_iterator<Point>(output, "\n"));
+    
     for (const Alpha_shape_3::Facet& f : filtered_regular_facets){
         output << 3;
 
-        for (int i = 0; i < 3; ++i)
-        {
+        for (int i = 0; i < 3; ++i){
             Alpha_shape_3::Vertex_handle vh = f.first->vertex(as.vertex_triple_index(f.second, i));
             output << " " << vids[vh];
         }
         output << "\n";
     }
+
+    
     
     return;
 
