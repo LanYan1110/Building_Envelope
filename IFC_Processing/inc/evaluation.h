@@ -40,6 +40,7 @@
 #include <OSD_Path.hxx>
 #include <GeomAPI_ProjectPointOnSurf.hxx>
 #include <Geom_Surface.hxx>
+#include <BRepExtrema_ExtFF.hxx>
 class BRepAdaptor_HSurface;
 
 #include <ifcparse/IfcFile.h>

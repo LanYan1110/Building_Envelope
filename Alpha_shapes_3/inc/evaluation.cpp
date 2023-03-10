@@ -6,7 +6,6 @@ int evaluation(std::string obj_point_cloud,std::string ifc_obj,std::string dista
     //Input: obj_point_cloud: path to the .obj sampled point cloud
     //       input_point_cloud: path to the ifc .obj
     //       distances: path to the file where the distances will be stored
-    
     std::vector<Point> points;
     std::vector<std::vector<std::size_t>> faces;
 
@@ -20,47 +19,37 @@ int evaluation(std::string obj_point_cloud,std::string ifc_obj,std::string dista
     }
 
     // orient polygon soup
-    CGAL::Polygon_mesh_processing::orient_polygon_soup(points,faces);
+    PMP::orient_polygon_soup(points,faces);
 
     // convert to polygon mesh
     Mesh ref1;
-    if(CGAL::Polygon_mesh_processing::is_polygon_soup_a_polygon_mesh(faces)){
-        CGAL::Polygon_mesh_processing::polygon_soup_to_polygon_mesh(points, faces, ref1);
+    if(PMP::is_polygon_soup_a_polygon_mesh(faces)){
+        PMP::polygon_soup_to_polygon_mesh(points, faces, ref1);
     }
 
     // triangulate the polygon mesh
-    CGAL::Polygon_mesh_processing::triangulate_faces(ref1);
+    PMP::triangulate_faces(ref1);
 
     // Compute the distance between the mesh and the point cloud
-    //CGAL::Polygon_mesh_processing::approximate_max_distance_to_point_set
-    
+    double precision=0.0001;
+    // Time the process
+    auto start = std::chrono::high_resolution_clock::now();
 
-
-
-
-
-
-
-
-
-
-
-
-    std::cout << "Read " << points.size() << " points and " << faces.size() << " faces" << std::endl;
-    
-    CGAL::Polygon_mesh_processing::orient_polygon_soup(points,faces);
-    std::cout << "Oriented " << points.size() << " points and " << faces.size() << " faces" << std::endl;
-
-    if(CGAL::Polygon_mesh_processing::is_polygon_soup_a_polygon_mesh(faces)){
-        std::cout << "The polygon soup is a polygon mesh" << std::endl;
-    }
-    else{
-        std::cout << "The polygon soup is not a polygon mesh" << std::endl;
+    for (auto p: points){
+        std::vector <Point> points2;
+        points2.push_back(p);
+        double distance=PMP::approximate_max_distance_to_point_set(ref1,points2,precision);
+        std::cout << "Distance: " << distance << std::endl;
+        // open the distance text file and append the distance
+        std::ofstream myfile;
+        myfile.open (distances, std::ios_base::app);
+        myfile << distance << std::endl;
+        myfile.close();
     }
 
-
-
-
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = finish - start;
+    std::cout << "Elapsed time: " << elapsed.count() << " s " << std::endl;
 
     return 0;
 	
