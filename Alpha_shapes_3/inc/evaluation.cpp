@@ -49,7 +49,7 @@ int evaluation(std::string obj_point_cloud,std::string ifc_obj,std::string dista
 
     auto finish = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = finish - start;
-    std::cout << "Elapsed time: " << elapsed.count() << " s " << std::endl;
+    std::cout << "Elapsed time: " << elapsed.count() << " s" << std::endl;
 
     return 0;
 	

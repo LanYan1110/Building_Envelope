@@ -2,6 +2,7 @@
 #include "inc/off_to_obj_converter.h"
 #include "inc/point_cloud_processor.h"
 #include "inc/evaluation.h"
+#include "inc/mesh_processor.h"
 
 #include <fstream>
 #include <sstream>
@@ -35,47 +36,40 @@ std::vector<std::string> GetInputs(std::string dir) {
 int main()
 {
     
-    //// Read raw point cloud files
-    //std::string whole_dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Raw_point_cloud/whole_alpha_shapes/";
-    //std::vector<std::string> input_files1 = GetInputs(whole_dir);
+    // Read raw point cloud files
+    std::string whole_dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Raw_point_cloud/whole_alpha_shapes/";
+    std::vector<std::string> input_files1 = GetInputs(whole_dir);
 
-    //// Process point cloud files
-    //// random simplify
-    //std::string processed_dir1 = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/random_simplify/";
-    //for (size_t i = 0; i < input_files1.size(); i++) {
-    //    //random_simplify(input_files1[i], processed_dir1);
-    //}
+    // Process point cloud files
 
-    //// grid simplify
-    //std::string processed_dir2 = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/grid_simplify/";
-    //for (size_t i = 0; i < input_files1.size(); i++) {
-    //    //grid_simplify(input_files1[i], processed_dir2);
-    //}
+    //Wlop_simplify_and_regularize_point_set
+    std::string processed_dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/wlop_simplify/";
+    for (size_t i = 0; i < processed_dir.size(); i++){
+        wlop_simplify(input_files1[i], processed_dir);
+    }
 
-    ////Hierachy_simplify_point_set
-    ////std::string processed_dir3 = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/hierachy_simplify/";
-    //for (size_t i = 0; i < input_files1.size(); i++) {
-    //    //grid_simplify(input_files1[i], processed_dir2);
-    //}
-    ////Wlop_simplify_and_regularize_point_set
-    ////std::string processed_dir4 = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/wlop_simplify/";
-
-
-    //for (size_t i = 0; i < processed_dir2.size(); i++) {
+    // for (size_t i = 0; i < processed_dir2.size(); i++) {
     //    // Export path for one alpha shape model. .off format
     //    std::string export_path = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OFF/" + clear_slash(input_files1[i])+ ".off";
     //    std::cout <<input_files1[i] << std::endl;
     //    //alpha_shape_constructor(input_files1[i],export_path);
     //    std::string export_obj = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/" + clear_slash(input_files1[i]) + ".obj";
     //    //off_to_obj(export_path, export_obj);
-    //}
+    // }
 
-    std::string obj_point_cloud="C:/Users/seuya/Documents/Thesis/distance_calculation/AC20-FZK-Haus.txt";
-    std::string ifc_obj="C:/Users/seuya/Documents/Thesis/distance_calculation/AC20-FZK-Haus.obj";
-    std::string distances="C:/Users/seuya/Documents/Thesis/distance_calculation/distances_AC20-FZK-Haus.txt";
-    if(evaluation(obj_point_cloud, ifc_obj, distances)==0){
-        std::cout << "Evaluation done" << std::endl;
-    }
+    // std::string obj_point_cloud="C:/Users/seuya/Documents/Thesis/distance_calculation/AC20-FZK-Haus.txt";
+    // std::string ifc_obj="C:/Users/seuya/Documents/Thesis/distance_calculation/AC20-FZK-Haus.obj";
+    // std::string distances="C:/Users/seuya/Documents/Thesis/distance_calculation/distances_AC20-FZK-Haus.txt";
+    // if(evaluation(obj_point_cloud, ifc_obj, distances)==0){
+    //     std::cout << "Evaluation done" << std::endl;
+    // }
 
+    // 3D alpha shape output before simplification
+    std::string original_obj="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/AC-20-Smiley-West-10-Bldg.ifc.xyz.obj";
+    // 3D alpha shape output after simplification   
+    std::string simplified_obj="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/simplified_AC-20-Smiley-West-10-Bldg.ifc.xyz.obj";
+    // mesh simplification
+    mesh_processor(original_obj, simplified_obj, 0.5);
+    
     return 0;
 }

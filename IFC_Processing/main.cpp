@@ -1,5 +1,6 @@
 #include "inc/sampler.h"
 #include "inc/helper.h"
+#include "inc/evaluation.h"
 
 #include <iostream>
 #include <sstream>

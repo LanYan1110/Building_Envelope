@@ -187,3 +187,45 @@ void hierachy_simplify(std::string input_path,std::string output_dir) {
     
 }
 
+int wlop_simplify(std::string input_path,std::string output_dir) {
+    //function to simplify point cloud using wlop algorithm
+    //input: point cloud, .XYZ file
+    //input: output directory for processed point cloud, .XYZ file
+    //return: none
+
+    std::vector<Point> points;
+    std::ifstream is(input_path);
+    if (!is.is_open()) {
+    std::cerr << "Error: could not open file " << input_path << std::endl;
+    exit(1);
+    }
+
+    // read points from file
+    int n;
+    is >> n;
+    double x, y, z;
+    for (int i = 0; i < n; ++i)
+    {
+        is >> x >> y >> z;
+        points.push_back(Point(x, y, z));
+    }
+    int input_size = points.size();
+
+    // Simplification: wlop_simplify
+    std::vector<Point> output;
+    //parameters
+    const double retain_percentage = 2;   // percentage of points to retain.
+    const double neighbor_radius = 0.5;   // neighbors size.
+    // Output filename
+    std::string output_filename = output_dir + clear_slash(input_path) + "_wlop_simplify_" + ".xyz";
+    
+    CGAL::wlop_simplify_and_regularize_point_set<Concurrency_tag>
+        (points, std::back_inserter(output),
+        CGAL::parameters::select_percentage(retain_percentage).
+        neighbor_radius (neighbor_radius));
+    if(!CGAL::IO::write_points(output_filename, output, CGAL::parameters::stream_precision(17)))
+        return 1;
+    
+    
+    return 0;
+}
