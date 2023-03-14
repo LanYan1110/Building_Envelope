@@ -6,6 +6,8 @@ int evaluation(std::string obj_point_cloud,std::string ifc_obj,std::string dista
     //Input: obj_point_cloud: path to the .obj sampled point cloud
     //       input_point_cloud: path to the ifc .obj
     //       distances: path to the file where the distances will be stored
+    // 
+    // mesh 
     std::vector<Point> points;
     std::vector<std::vector<std::size_t>> faces;
 
@@ -53,4 +55,60 @@ int evaluation(std::string obj_point_cloud,std::string ifc_obj,std::string dista
 
     return 0;
 	
+}
+
+
+
+
+int point_set_to_mesh_distances(std::string obj_point_cloud,std::string ifc_obj,std::string distances){
+    //read the point cloud and the mesh
+    //read the point cloud from .xyz file
+    std::vector<Point> o_points;
+    std::ifstream input(obj_point_cloud);
+    double x, y, z;
+	for (int i = 0; i <4838; ++i){
+		input >> x >> y >> z;
+		o_points.push_back(Point(x, y, z));
+	}
+
+    // read the mesh from .obj file
+    std::vector<Point> points;
+    std::vector<std::vector<std::size_t>> triangles;
+
+   //CGAL::IO::read_OBJ(ifc_obj, points,faces);
+   // read polygon soup
+    if(!CGAL::IO::read_polygon_soup(ifc_obj, points, triangles) ||
+     points.size() == 0 || triangles.size() == 0){
+        std::cerr << "Error: can not read input file.\n";
+        return 1;
+    }
+    // orient polygon soup
+    PMP::orient_polygon_soup(points,triangles);
+    // convert to polygon mesh
+    Mesh m;
+    if(PMP::is_polygon_soup_a_polygon_mesh(triangles)){
+        PMP::polygon_soup_to_polygon_mesh(points, triangles, m);
+    }
+    // triangulate the polygon mesh
+    PMP::triangulate_faces(m);
+
+    // compute the AABB tree for the mesh
+    Tree tree(faces(m).first, faces(m).second, m);
+
+    // find the closest point for every point
+    for (auto p: o_points){
+        Point closest = tree.closest_point(p);
+        std::cout << "Closest point: " << closest << std::endl;
+        // open the distance text file and append the distance
+        std::ofstream myfile;
+        myfile.open (distances, std::ios_base::app);
+        std::cout<<"current distance is: "<<CGAL::squared_distance(p,closest)<< std::endl;
+        myfile << CGAL::squared_distance(p,closest) << std::endl;
+        myfile.close();
+    }
+
+
+
+
+    return 0;
 }

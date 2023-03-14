@@ -43,10 +43,10 @@ int main()
     // Process point cloud files
 
     //Wlop_simplify_and_regularize_point_set
-    std::string processed_dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/wlop_simplify/";
-    for (size_t i = 0; i < processed_dir.size(); i++){
-        wlop_simplify(input_files1[i], processed_dir);
-    }
+    //std::string processed_dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Processed_point_cloud/whole_alpha_shapes/wlop_simplify/";
+    //for (size_t i = 0; i < processed_dir.size(); i++){
+    //    wlop_simplify(input_files1[i], processed_dir);
+    //}
 
     // for (size_t i = 0; i < processed_dir2.size(); i++) {
     //    // Export path for one alpha shape model. .off format
@@ -57,19 +57,20 @@ int main()
     //    //off_to_obj(export_path, export_obj);
     // }
 
-    // std::string obj_point_cloud="C:/Users/seuya/Documents/Thesis/distance_calculation/AC20-FZK-Haus.txt";
-    // std::string ifc_obj="C:/Users/seuya/Documents/Thesis/distance_calculation/AC20-FZK-Haus.obj";
-    // std::string distances="C:/Users/seuya/Documents/Thesis/distance_calculation/distances_AC20-FZK-Haus.txt";
-    // if(evaluation(obj_point_cloud, ifc_obj, distances)==0){
-    //     std::cout << "Evaluation done" << std::endl;
-    // }
+    std::string obj_point_cloud="C:/Users/seuya/Documents/Thesis/distance_calculation/AC20-FZK-Haus.txt";
+    std::string ifc_obj="C:/Users/seuya/Documents/Thesis/distance_calculation/AC20-FZK-Haus.obj";
+    std::string distances="C:/Users/seuya/Documents/Thesis/distance_calculation/distances_AC20-FZK-Haus.txt";
 
-    // 3D alpha shape output before simplification
-    std::string original_obj="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/AC-20-Smiley-West-10-Bldg.ifc.xyz.obj";
-    // 3D alpha shape output after simplification   
-    std::string simplified_obj="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/simplified_AC-20-Smiley-West-10-Bldg.ifc.xyz.obj";
-    // mesh simplification
-    mesh_processor(original_obj, simplified_obj, 0.5);
+    if(point_set_to_mesh_distances(obj_point_cloud, ifc_obj, distances)==0){
+        std::cout << "Evaluation done" << std::endl;
+    }
+
+    // // 3D alpha shape output before simplification
+    // std::string original_obj="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/AC-20-Smiley-West-10-Bldg.ifc.xyz.obj";
+    // // 3D alpha shape output after simplification   
+    // std::string simplified_obj="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/simplified_AC-20-Smiley-West-10-Bldg.ifc.xyz.obj";
+    // // mesh simplification
+    // mesh_processor(original_obj, simplified_obj, 0.5);
     
     return 0;
 }

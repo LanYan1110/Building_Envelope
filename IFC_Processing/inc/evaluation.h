@@ -49,9 +49,5 @@ class BRepAdaptor_HSurface;
 #include <ifcgeom_schema_agnostic/kernel.h>
 #include <ifcgeom_schema_agnostic/IfcGeomIterator.h>
 
-
-// Function that extract all vertices from an Ifc File
-void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string output, IfcParse::IfcFile* file, std::string input);
-void ifc_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out_points, 
-IfcParse::IfcFile* file, std::string input,
-int& input_v, int& input_f,int& out_v);
+// openCASCADE includes
+#include <BRepExtrema_DistShapeShape.hxx>
