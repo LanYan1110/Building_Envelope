@@ -1,6 +1,5 @@
 #include "inc/sampler.h"
 #include "inc/helper.h"
-#include "inc/evaluation.h"
 
 #include <iostream>
 #include <sstream>
@@ -103,11 +102,11 @@ int main(int argc, char** argv) {
 	std::string evaluation= root_dir +"Intermediate_Data/evaluation/evaluation.csv";
 	// Open evaluation file and write header line for the csv file
 	std::ofstream evaluation_file;
-	evaluation_file.open(evaluation);
-	evaluation_file<<"file_name"<<","<<"Input_Vertices"<<","<<"Input_Faces"<<
-	","<<"Generation_time_of_point_cloud"<<
-	","<<"Pointcloud_points"<<"\n";
-	evaluation_file.close();
+	//evaluation_file.open(evaluation);
+	//evaluation_file<<"file_name"<<","<<"Input_Vertices"<<","<<"Input_Faces"<<
+	//","<<"Generation_time_of_point_cloud"<<
+	//","<<"Pointcloud_points"<<"\n";
+	//evaluation_file.close();
 
 	// Vectors that store evaluation indictors
 	std::vector<int> input_vertices;
@@ -115,6 +114,7 @@ int main(int argc, char** argv) {
 	std::vector<int> output_vertices;
 	std::vector<double> generation_time;
 	std::vector<std::string> file_names;
+
 
 	for (size_t i = 0; i < input_files.size(); i++) {
 		IfcParse::IfcFile input(input_files[i]);
@@ -157,11 +157,11 @@ int main(int argc, char** argv) {
 	}
 
 	// output evaluation indicators to the evaluation file
-	evaluation_file.open(evaluation, std::ios_base::app);
-	for (size_t i = 0; i < input_vertices.size(); i++) {
-		evaluation_file << file_names[i] << "," << input_vertices[i] << ","
-		 << input_faces[i] << "," << generation_time[i] << "," << output_vertices[i] << "\n";
-	}
+	//evaluation_file.open(evaluation, std::ios_base::app);
+	//for (size_t i = 0; i < input_vertices.size(); i++) {
+	//	evaluation_file << file_names[i] << "," << input_vertices[i] << ","
+	//	 << input_faces[i] << "," << generation_time[i] << "," << output_vertices[i] << "\n";
+	//}
 
 	return 0;
 

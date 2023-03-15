@@ -9,6 +9,7 @@
 #include <string>
 #include <filesystem>
 #include <vector>
+#include <chrono>
 
 #include <iostream>
 #include <fstream>
@@ -28,6 +29,11 @@ typedef CGAL::AABB_traits<K, Primitive> Traits;
 typedef CGAL::AABB_tree<Traits> Tree;
 typedef boost::optional<Tree::Intersection_and_primitive_id<Ray>::Type> Ray_intersection;
 
+std::string clear_slash(std::string const& path_of_file, std::string const& d_slash="/\\"){
+    size_t index_of_slash = path_of_file.find_last_of(d_slash);
+    std::string file_name = path_of_file.substr(index_of_slash + 1);
+    return file_name;
+}
 
 std::vector<std::string> GetInputs(std::string dir) {
 
@@ -50,28 +56,47 @@ std::vector<std::string> GetInputs(std::string dir) {
 
 
 int main(){
+    std::string s_reconstructed_obj="C:/Users/seuya/Documents/Thesis/distance_calculation/BIMobject_Demo_Model_Revit.xyz";
+    std::string reconstructed_obj="C:/Users/seuya/Documents/Thesis/distance_calculation/BIMobject_Demo_Model_Revit.ifc_0.5off.obj";
+    std::string original_obj="C:/Users/seuya/Documents/Thesis/distance_calculation/BIMobject_Demo_Model_Revit.obj";
+    std::string distances="C:/Users/seuya/Documents/Thesis/distance_calculation/"+clear_slash(original_obj)+"distances.txt";
+    std::vector<Point> r_points;
+    std::vector<std::vector<std::size_t>> r_faces2;
     
-    std::string obj_point_cloud="C:/Users/seuya/Documents/Thesis/distance_calculation/AC20-FZK-Haus.txt";
-    std::string ifc_off="C:/Users/seuya/Documents/Thesis/distance_calculation/AC20-FZK-Haus.ifc.xyz.off";
-    std::string ifc_obj="C:/Users/seuya/Documents/Thesis/distance_calculation/AC20-FZK-Haus.obj";
-    std::string distances="C:/Users/seuya/Documents/Thesis/distance_calculation/distances_AC20-FZK-Haus.txt";
-    std::string ifc_out_off="C:/Users/seuya/Documents/Thesis/distance_calculation/new.off";
-    // if(point_set_to_mesh_distances(obj_point_cloud, ifc_off, distances)==0){
-    //     std::cout << "Evaluation done" << std::endl;
-    // }
+    //// read polygon soup
+    //if(!CGAL::IO::read_polygon_soup(reconstructed_obj, r_points, r_faces2) ||
+    //r_points.size() == 0 || r_faces2.size() == 0){
+    //    std::cerr << "Error: can not read input file.\n";
+    //    return 1;
+    //}
 
-    std::vector<Point> o_points;
-    std::ifstream input(obj_point_cloud);
-    double x, y, z;
-	for (int i = 0; i <4838; ++i){
-		input >> x >> y >> z;
-		o_points.push_back(Point(x, y, z));
-	}
+    //// orient polygon soup
+    //PMP::orient_polygon_soup(r_points, r_faces2);
+    //
+    //// convert to polygon mesh
+    //Mesh r_surface_mesh;
+    //if(PMP::is_polygon_soup_a_polygon_mesh(r_faces2)){
+    //    PMP::polygon_soup_to_polygon_mesh(r_points, r_faces2, r_surface_mesh);
+    //}
+
+
+    // sample the points
+    std::vector<Point> r_sample_points;
+    //r_sample_points.push_back(Point(0,0,0));
+    //open file
+    std::ifstream input(s_reconstructed_obj);
+     double x, y, z;
+	 for (int i = 0; i <4838; ++i){
+	 	input >> x >> y >> z;
+	 	r_sample_points.push_back(Point(x, y, z));
+	 }
+    
+    //PMP::sample_triangle_mesh(r_surface_mesh,r_sample_points);
 
     std::vector<Point> points;
     std::vector<std::vector<std::size_t>> faces1;
     // read polygon soup
-    if(!CGAL::IO::read_polygon_soup(ifc_obj, points, faces1) ||
+    if(!CGAL::IO::read_polygon_soup(reconstructed_obj, points, faces1) ||
     points.size() == 0 || faces1.size() == 0){
         std::cerr << "Error: can not read input file.\n";
         return 1;
@@ -86,15 +111,13 @@ int main(){
         PMP::polygon_soup_to_polygon_mesh(points, faces1, surface_mesh);
     }
 
-
-    CGAL::IO::write_polygon_mesh(ifc_out_off, surface_mesh, CGAL::parameters::stream_precision(17));
-
-
     Tree tree;
     tree.insert(faces(surface_mesh).first, faces(surface_mesh).second, surface_mesh);
     tree.build(); // CGAL_assertion( idx < data.size() ) fails
 
-   for (auto p: o_points){
+    //time the process
+    auto start = std::chrono::high_resolution_clock::now();
+   for (auto p: r_sample_points){
         Point closest = tree.closest_point(p);
         //std::cout << "Closest point: " << closest<< std::endl;
         // open the distance text file and append the distance
@@ -104,6 +127,9 @@ int main(){
         myfile << CGAL::squared_distance(p,closest) << std::endl;
         myfile.close();
     }
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = (finish - start);
+    std::cout << "Elapsed time: " << elapsed.count() << " s"<<std::endl;
 
     return 0;
 }

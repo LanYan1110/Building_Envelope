@@ -25,7 +25,9 @@
 typedef CGAL::Exact_predicates_inexact_constructions_kernel Gt;
 typedef Gt::Point_3                                  Point;
 typedef CGAL::Surface_mesh<Point>                           Mesh;
+typedef Mesh::Face_iterator Face_iterator;
+typedef Mesh::Vertex_iterator Vertex_iterator;
 namespace SMS = CGAL::Surface_mesh_simplification;
 namespace PMP = CGAL::Polygon_mesh_processing;
 
-int mesh_processor(std::string input_mesh, std::string output_mesh, double stop_ratio);
+int mesh_processor(std::string input_mesh, std::string output_mesh, double stop_ratio,std::string evaluation);

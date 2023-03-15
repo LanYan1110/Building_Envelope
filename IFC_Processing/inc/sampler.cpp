@@ -164,8 +164,6 @@ int& input_v, int& input_f,int& out_v) {
 							gp_Pnt p = b_face.Value(u, v);
 							//std::cout << p.X() << " " << p.Y() << " " << p.Z() << std::endl;
 							points.emplace_back(p);
-							//product.emplace_back(p);
-							GeomAPI_ProjectPointOnSurf proj(p, b_face); 
 							i++;
 
 						}

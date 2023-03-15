@@ -1,4 +1,5 @@
 #include "off_to_obj_converter.h"
+#include "point_cloud_processor.h"
 
 void off_to_obj(std::string input_filename, std::string output_filename) {
     std::ifstream input_file(input_filename);
@@ -54,6 +55,9 @@ void off_to_obj(std::string input_filename, std::string output_filename) {
     for (int i = 0; i < num_faces; i++) {
         output_file << "f " << faces[i][0]+1 << " " << faces[i][1]+1 << " " << faces[i][2]+1 << "\n";
     }
+
+    std::ofstream evaluation_file;
+
 
     output_file.close();
 }

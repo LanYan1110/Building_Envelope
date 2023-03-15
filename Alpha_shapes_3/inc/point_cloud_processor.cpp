@@ -223,8 +223,13 @@ int wlop_simplify(std::string input_path,std::string output_dir) {
         (points, std::back_inserter(output),
         CGAL::parameters::select_percentage(retain_percentage).
         neighbor_radius (neighbor_radius));
-    if(!CGAL::IO::write_points(output_filename, output, CGAL::parameters::stream_precision(17)))
-        return 1;
+
+    std::ofstream out(output_filename, std::ofstream::out);
+	out << points.size() << "\n";
+	for (int i = 0; i < points.size(); i++) {
+		out << points[i].x() << " " << points[i].y() << " " << points[i].z() << "\n";
+	}
+	out.close();
     
     
     return 0;

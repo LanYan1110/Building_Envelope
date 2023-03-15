@@ -27,6 +27,7 @@
 #include <string>
 #include <filesystem>
 #include <vector>
+#include <chrono>
 
 namespace fs = std::filesystem;
 
@@ -47,4 +48,5 @@ typedef Alpha_shape_3::Alpha_iterator                Alpha_iterator;
 typedef CGAL::Surface_mesh<Point>                           Mesh;
 
 
-void alpha_shape_constructor(std::string input_path,std::string output_path);
+void alpha_shape_constructor
+(std::string input_path,std::string output_path,std::string evaluation);
