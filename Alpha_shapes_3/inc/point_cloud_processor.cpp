@@ -226,8 +226,8 @@ int wlop_simplify(std::string input_path,std::string output_dir) {
 
     std::ofstream out(output_filename, std::ofstream::out);
 	out << points.size() << "\n";
-	for (int i = 0; i < points.size(); i++) {
-		out << points[i].x() << " " << points[i].y() << " " << points[i].z() << "\n";
+	for (int i = 0; i < output.size(); i++) {
+		out << output[i].x() << " " << output[i].y() << " " << output[i].z() << "\n";
 	}
 	out.close();
     
