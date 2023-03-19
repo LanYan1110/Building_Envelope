@@ -2,16 +2,13 @@
 #include "point_cloud_processor.h"
 
 void alpha_shape_constructor
-(std::string input_path,std::string output_path,std::string evaluation) {
+(std::string input_path,std::string output_path,int& out_v, int& out_f) {
     
     //function to construct alpha shape from a point cannot overload functions distinguished by return type aloncloud
     //input: point cloud, .XYZ file
     //input: output path for alpha shape, obj file
     //output: None
 
-    // time the process
-    // time begin
-    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     std::vector<Point> points;
 	std::ifstream is(input_path);
 	if (!is.is_open()) {
@@ -112,16 +109,9 @@ void alpha_shape_constructor
         }
         output << "\n";
     }
-    // time end
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    double time = (std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count())/1000000;
-    std::cerr << "Time taken by function: " << time << " seconds" << std::endl;
 
-    std::ofstream evaluation_file;
-    evaluation_file.open(evaluation, std::ios_base::app);
-    evaluation_file <<clear_slash(input_path)<< "," << points.size() << ","
-	<< filtered_regular_facets.size()<<","<<time<< "\n";
-    evaluation_file.close();
+    out_v = points.size();
+    out_f = filtered_regular_facets.size();
     
     return;
 

@@ -1,5 +1,3 @@
-# Created by the script cgal_create_cmake_script
-# This is the CMake script for compiling a CGAL application.
 
 set( CMAKE_BUILD_TYPE "Release")
 

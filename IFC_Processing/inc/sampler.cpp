@@ -1,7 +1,9 @@
 #include "sampler.h"
 #include "helper.h"
 
-void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string output, IfcParse::IfcFile* file, std::string input) {
+void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string output,
+ IfcParse::IfcFile* file, std::string input) {
+	
 	std::vector<std::vector<gp_Pnt>> products;
 	IfcGeom::Kernel my_kernel(file);
 	helperCluster* hCluster = new helperCluster;
@@ -9,6 +11,7 @@ void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out
 	int num_of_v = 0;
 	int num_of_f = 0;
 
+	int count=0;
 	for (auto it = prods->begin(); it != prods->end(); it++)
 	{
 		IfcSchema::IfcProduct* prod = *it;
@@ -71,11 +74,7 @@ void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out
 
 	}
 
-	//ofstream out(output, std::ofstream::out,);
-	//std::ofstream out;
-	//ofstream out(output, std::ofstream::out);
 	ofstream out(output, std::ios::out | std::ios::app);
-	int count = 0;
 	for (auto product : products) {
 		out << "Procduct" << count << "\n";
 		out << product.size() << "\n";
@@ -85,13 +84,6 @@ void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out
 	}
 
 	out.close();
-
-	//ofstream out2(evaluation, std::ofstream::out);
-	//out2 << num_of_v <<","<< num_of_f<<"\n";
-	//out2.close();
-
-	std::cout << "Number of Vertices are: " << num_of_v << std::endl;
-	std::cout << "Number of faces are: " << num_of_f << std::endl;
 
 	return;
 }
@@ -192,3 +184,4 @@ int& input_v, int& input_f,int& out_v) {
 
 	return;
 }
+

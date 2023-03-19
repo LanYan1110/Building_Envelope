@@ -108,13 +108,13 @@ int main(int argc, char** argv) {
 	//","<<"Pointcloud_points"<<"\n";
 	//evaluation_file.close();
 
+
 	// Vectors that store evaluation indictors
 	std::vector<int> input_vertices;
 	std::vector<int> input_faces;
 	std::vector<int> output_vertices;
 	std::vector<double> generation_time;
 	std::vector<std::string> file_names;
-
 
 	for (size_t i = 0; i < input_files.size(); i++) {
 		IfcParse::IfcFile input(input_files[i]);
@@ -131,7 +131,8 @@ int main(int argc, char** argv) {
 		IfcSchema::IfcProduct::list::ptr prods = file->instances_by_type<IfcSchema::IfcProduct>();
 		
 		auto start = std::chrono::high_resolution_clock::now();
-		ifc_sampler(prods, export_path, file, input_files[i],current_v,current_f,cur_out_v);
+		//ifc_sampler(prods, export_path, file, input_files[i],current_v,current_f,cur_out_v);
+		//ifc_product_sampler(prods, export_path, file, input_files[i],current_v,current_f,cur_out_v);
 		auto stop = std::chrono::high_resolution_clock::now();
 		auto elapsed_time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 		auto duration = elapsed_time.count()/ 1000000;

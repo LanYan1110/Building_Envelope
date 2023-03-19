@@ -49,4 +49,6 @@ typedef CGAL::Surface_mesh<Point>                           Mesh;
 
 
 void alpha_shape_constructor
-(std::string input_path,std::string output_path,std::string evaluation);
+(std::string input_path,std::string output_path,int& out_v, int& out_f);
+void indi_alpha_shape_constructor
+(std::string input_path,std::string output_path,int& out_v, int& out_f);
