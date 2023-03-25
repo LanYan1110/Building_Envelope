@@ -30,4 +30,4 @@ typedef Mesh::Vertex_iterator Vertex_iterator;
 namespace SMS = CGAL::Surface_mesh_simplification;
 namespace PMP = CGAL::Polygon_mesh_processing;
 
-int mesh_processor(std::string input_mesh, std::string output_mesh, double stop_ratio,std::string evaluation);
+int mesh_processor(std::string input_mesh, std::string output_mesh, double stop_ratio,int& out_v, int& out_f);

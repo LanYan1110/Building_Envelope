@@ -1,7 +1,8 @@
 #include "mesh_processor.h"
 #include "point_cloud_processor.h"
 
-int mesh_processor(std::string input_mesh, std::string output_mesh, double stop_ratio,std::string evaluation)
+int mesh_processor(std::string input_mesh, std::string output_mesh, double stop_ratio,
+int& out_v, int& out_f)
 {
     std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
     std::vector<Point> points;
@@ -44,11 +45,8 @@ int mesh_processor(std::string input_mesh, std::string output_mesh, double stop_
         ++num_faces;
     }
 
-    std::ofstream evaluation_file;
-    evaluation_file.open(evaluation, std::ios_base::app);
-    evaluation_file <<clear_slash(input_mesh)<< "," <<num_vertices << ","
-	<< num_faces<<","<<time<< "\n";
-    evaluation_file.close();
+    out_v = num_vertices;
+    out_f = num_faces;
     
     return 0;
 

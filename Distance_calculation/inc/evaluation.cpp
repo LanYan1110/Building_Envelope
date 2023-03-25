@@ -1,7 +1,8 @@
 #include "evaluation.h"
 
 
-int point_set_to_mesh_distances(std::string obj_point_cloud,std::string ifc_obj,std::string distances){
+int point_set_to_mesh_distances
+(std::string input_mesh_dir,std::string reconstructed_mesh_dir,std::string evaluation){
 
     return 0;
 

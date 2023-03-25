@@ -58,31 +58,33 @@ int main(){
 
     // directory of the orginal ifc meshes
     std::string input_mesh_dir="C:/Users/seuya/Documents/Thesis/RawData/obj/";
-    std::vector<std::string> input_mesh=GetInputs(input_mesh_dir);
+    //std::vector<std::string> input_mesh=GetInputs(input_mesh_dir);
+    std::vector<std::string> input_mesh;
+    input_mesh.emplace_back("C:/Users/seuya/Documents/Thesis/RawData/obj/AC20-FZK-Haus.obj");
+
 
     // directory of the reconstructed ifc meshes
-    std::string reconstructed_mesh_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/unprocessed";
-    std::vector<std::string> reconstructed_mesh=GetInputs(reconstructed_mesh_dir);
+    std::string reconstructed_mesh_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/mesh_simplify/";
+    //std::vector<std::string> reconstructed_mesh=GetInputs(reconstructed_mesh_dir);
+    std::vector<std::string> reconstructed_mesh;
+    reconstructed_mesh.emplace_back("C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/mesh_simplify/AC20-FZK-Haus.ifcr_p.xyz.obj");
 
     // path to the evaluation file
-    std::string evaluation="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Evaluation/evaluation_distance.csv";
-    // write to the evaluation file
-    std::ofstream evaluation_file;
-	evaluation_file.open(evaluation);
-    evaluation_file<<"name"<<","<<"number of points" << "," << "time" << "," << "min" << "," << "max" << std::endl;
-    evaluation_file.close();
+ //   std::string evaluation="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Evaluation/evaluation_distance_mesh_simplify.csv";
+ //   // write to the evaluation file
+ //   std::ofstream evaluation_file;
+	//evaluation_file.open(evaluation);
+ //   evaluation_file<<"name"<<","<<"number of points" << "," << "time" << "," << "min" << "," << "max" << std::endl;
+ //   evaluation_file.close();
 
     for (int i=0;i<input_mesh.size();i++){
-
         auto start = std::chrono::high_resolution_clock::now();
         std::string original_obj=input_mesh[i];
         std::string reconstructed_obj=reconstructed_mesh[i];
-        std::string sampled_points="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Points/"+clear_slash(input_mesh[i])+"_p.txt";
-        std::string distances="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Distances/"+clear_slash(input_mesh[i])+"_d.txt";
+        std::string sampled_points="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Points/mesh_simplify/"+clear_slash(input_mesh[i])+"_p.txt";
+        std::string distances="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Distances/mesh_simplify/"+clear_slash(input_mesh[i])+"_d.txt";
         std::cout<<"original obj: "<<original_obj<<std::endl;
         std::cout<<"reconstructed obj: "<<reconstructed_obj<<std::endl;
-        std::cout<<"sampled points: "<<sampled_points<<std::endl;
-        std::cout<<"distances: "<<distances<<std::endl;
 
         // read reconstructed obj and sample points
         std::vector<Point> r_points;
@@ -155,7 +157,6 @@ int main(){
             myfile.close();
         }
 
-
         auto finish = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = (finish - start);
         std::cout << "Elapsed time: " << elapsed.count() << " s"<<std::endl;
@@ -165,10 +166,10 @@ int main(){
         auto max_element = std::max_element(distances_vector.begin(), distances_vector.end());
 
         // write to the evaluation file
-        std::ofstream evaluation_file(evaluation, std::ios::app);
-        evaluation_file<<clear_slash(input_mesh[i])<<","<<r_sample_points.size()<< "," <<std::setprecision(2)<<std::fixed<<elapsed.count() 
-        << "," << std::setprecision(4)<<std::fixed<<*min_element << "," << *max_element << std::endl;
-        evaluation_file.close();
+        //std::ofstream evaluation_file(evaluation, std::ios::app);
+        //evaluation_file<<clear_slash(input_mesh[i])<<","<<r_sample_points.size()<< "," <<std::setprecision(2)<<std::fixed<<elapsed.count() 
+        //<< "," << std::setprecision(4)<<std::fixed<<*min_element << "," << *max_element << std::endl;
+        //evaluation_file.close();
     }
     
     return 0;

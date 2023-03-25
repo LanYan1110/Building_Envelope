@@ -37,3 +37,6 @@ typedef CGAL::AABB_tree<Traits> Tree;
 typedef boost::optional<Tree::Intersection_and_primitive_id<Ray>::Type> Ray_intersection;
 
 namespace PMP = CGAL::Polygon_mesh_processing;
+
+int point_set_to_mesh_distances
+(std::string input_mesh_dir,std::string reconstructed_mesh_dir,std::string evaluation);

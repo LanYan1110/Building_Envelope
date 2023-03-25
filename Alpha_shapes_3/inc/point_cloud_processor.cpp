@@ -214,8 +214,8 @@ int wlop_simplify(std::string input_path,std::string output_dir) {
     // Simplification: wlop_simplify
     std::vector<Point> output;
     //parameters
-    const double retain_percentage = 2;   // percentage of points to retain.
-    const double neighbor_radius = 0.5;   // neighbors size.
+    const double retain_percentage =65;   // percentage of points to retain.
+    const double neighbor_radius = 0.3;   // neighbors size.
     // Output filename
     std::string output_filename = output_dir + clear_slash(input_path) + "_wlop_simplify_" + ".xyz";
     
@@ -225,7 +225,7 @@ int wlop_simplify(std::string input_path,std::string output_dir) {
         neighbor_radius (neighbor_radius));
 
     std::ofstream out(output_filename, std::ofstream::out);
-	out << points.size() << "\n";
+	out <<output.size() << "\n";
 	for (int i = 0; i < output.size(); i++) {
 		out << output[i].x() << " " << output[i].y() << " " << output[i].z() << "\n";
 	}

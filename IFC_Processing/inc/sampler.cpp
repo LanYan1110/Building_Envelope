@@ -2,7 +2,7 @@
 #include "helper.h"
 
 void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string output,
- IfcParse::IfcFile* file, std::string input) {
+ IfcParse::IfcFile* file, std::string input,double grid_size) {
 	
 	std::vector<std::vector<gp_Pnt>> products;
 	IfcGeom::Kernel my_kernel(file);
@@ -91,7 +91,7 @@ void ifc_product_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out
 
 void ifc_sampler(IfcSchema::IfcProduct::list::ptr prods, std::string out_points, 
 IfcParse::IfcFile* file, std::string input,
-int& input_v, int& input_f,int& out_v) {
+int& input_v, int& input_f,int& out_v,double grid_size) {
 	//Description: This function samples points from the ifc file and saves them in a xyz file
 	//Parameters: prods: list of products in the ifc file
 	//			  out_points: path to the output file
@@ -124,7 +124,7 @@ int& input_v, int& input_f,int& out_v) {
 
 			//std::cout << prod->data().type()->name() << std::endl;
 			//Sampling points over each surface of the current IfcProduct
-			double U_interval = 0.1; double V_interval = 0.1;
+			double U_interval =grid_size; double V_interval =grid_size;
 			TopoDS_Shape shape = h->getObjectShape(prod);
 			TopExp_Explorer expl_v;
 			for (expl_v.Init(shape, TopAbs_VERTEX); expl_v.More(); expl_v.Next())

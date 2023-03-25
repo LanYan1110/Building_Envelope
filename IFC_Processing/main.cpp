@@ -98,16 +98,24 @@ int main(int argc, char** argv) {
 	std::cout<<root_dir<<std::endl;
 	segments.clear();
 
+
+	// set the grid size for the point cloud
+	double grid_size;
+	std::cout << "Please enter the grid size for the point cloud" << std::endl;
+	std::cin >> grid_size;
+
 	// Output path for evaluation matrix
-	std::string evaluation= root_dir +"Intermediate_Data/evaluation/evaluation.csv";
+	//double grid size to a string
+
+	std::string evaluation= root_dir +"Intermediate_Data/evaluation/"+
+	std::to_string(grid_size)+"_evaluation.csv";
 	// Open evaluation file and write header line for the csv file
 	std::ofstream evaluation_file;
-	//evaluation_file.open(evaluation);
-	//evaluation_file<<"file_name"<<","<<"Input_Vertices"<<","<<"Input_Faces"<<
-	//","<<"Generation_time_of_point_cloud"<<
-	//","<<"Pointcloud_points"<<"\n";
-	//evaluation_file.close();
-
+	evaluation_file.open(evaluation);
+	evaluation_file<<"file_name"<<","<<"Input_Vertices"<<","<<"Input_Faces"<<
+	","<<"Generation_time_of_point_cloud"<<
+	","<<"Pointcloud_points"<<"\n";
+	evaluation_file.close();
 
 	// Vectors that store evaluation indictors
 	std::vector<int> input_vertices;
@@ -124,38 +132,36 @@ int main(int argc, char** argv) {
 		// Output path for point cloud
 		boost::split(segments, input_files[i], boost::is_any_of("/"));
 
-		std::string export_path = root_dir + "Intermediate_Data/Raw_point_cloud/whole_alpha_shapes/" + segments[segments.size() - 1] + "r_p.xyz";
+		// Create a folder for the point cloud
+		std::string folder_path = root_dir + "Intermediate_Data/Raw_point_cloud/whole_alpha_shapes/"+std::to_string(grid_size)+"/";
+		std::filesystem::create_directories(folder_path);
+		
+		std::string export_path = folder_path + segments[segments.size() - 1] +"_"+std::to_string(grid_size)+".xyz";
 		std::cout << export_path << std::endl;
 
 		// Iterate through the IfcProducts, sample point clouds from each product, and export to .xyz file
 		IfcSchema::IfcProduct::list::ptr prods = file->instances_by_type<IfcSchema::IfcProduct>();
 		
 		auto start = std::chrono::high_resolution_clock::now();
-		//ifc_sampler(prods, export_path, file, input_files[i],current_v,current_f,cur_out_v);
-		//ifc_product_sampler(prods, export_path, file, input_files[i],current_v,current_f,cur_out_v);
+		ifc_sampler(prods, export_path, file, input_files[i],
+		current_v,current_f,cur_out_v,grid_size);
+
 		auto stop = std::chrono::high_resolution_clock::now();
 		auto elapsed_time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 		auto duration = elapsed_time.count()/ 1000000;
 		std::cout << "Elapsed time: " << duration << " seconds" << std::endl;
 
-		//Push back the evaluation indicators to the vectors
-		input_vertices.push_back(current_v);
-		input_faces.push_back(current_f);
-		generation_time.push_back(duration);
-		file_names.push_back(segments[segments.size() - 1]);
-		output_vertices.push_back(cur_out_v);
-
 		// Output the elapsed time to the evaluation file
-		//evaluation_file.open(evaluation, std::ios_base::app);
-		//ifc_product_sampler(prods, export_path2, file, input_files[i]);
+		evaluation_file.open(evaluation, std::ios_base::app);
+		evaluation_file << segments[segments.size() - 1] << "," << current_v << "," << current_f << "," << duration << "," << cur_out_v << "\n";
 
 	}
 
 	// print input vertices and faces
-	for (size_t i = 0; i < input_vertices.size(); i++) {
-		std::cout << input_vertices[i] << std::endl;
-		std::cout << input_faces[i] << std::endl;
-	}
+	// for (size_t i = 0; i < input_vertices.size(); i++) {
+	// 	std::cout << input_vertices[i] << std::endl;
+	// 	std::cout << input_faces[i] << std::endl;
+	// }
 
 	// output evaluation indicators to the evaluation file
 	//evaluation_file.open(evaluation, std::ios_base::app);
