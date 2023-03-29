@@ -11,6 +11,7 @@
 #include <chrono>
 #include <iomanip>
 #include <algorithm>
+#include <numeric>
 
 #include <CGAL/Surface_mesh/IO/OFF.h>
 #include <CGAL/Simple_cartesian.h>
@@ -18,6 +19,7 @@
 #include <CGAL/AABB_traits.h>
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/AABB_face_graph_triangle_primitive.h>
+
 
 
 typedef CGAL::Simple_cartesian<double> K;
@@ -65,22 +67,24 @@ int main(){
     double grid_size;
     std::cout<<"Enter the grid size: ";
     std::cin>>grid_size;
-    std::string reconstructed_mesh_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/unprocessed/"+std::to_string(grid_size)+"/";
+    std::string reconstructed_mesh_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/mesh_simplify/"+std::to_string(grid_size)+"/";
     std::vector<std::string> reconstructed_mesh=GetInputs(reconstructed_mesh_dir);
  
     // path to the evaluation file
-   std::string evaluation="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Evaluation/evaluation_distance_"+std::to_string(grid_size)+".csv";
-   // write to the evaluation file
-   std::ofstream evaluation_file;
-   evaluation_file.open(evaluation);
-   evaluation_file<<"name"<<","<<"number of points" << "," << "time" << "," << "min" << "," << "max" << std::endl;
-   evaluation_file.close();
+    std::string evaluation="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Evaluation/evaluation_distance_"+std::to_string(grid_size)+"_mesh_simplify.csv";
+    // write to the evaluation file
+    std::ofstream evaluation_file;
+    evaluation_file.open(evaluation);
+    evaluation_file<<"name"<<","<<"number of points" << "," << "time" << "," << "min" << "," << "max" <<
+    ","<<"mean"<<","<<"SD"<<","<<">0.1_percentage"<<std::endl;
+    evaluation_file.close();
 
     // directory of the sampled points
-    std::string sampled_points_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Points/unprocessed/"+std::to_string(grid_size)+"/";
+    std::string sampled_points_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Points/mesh_simplify/"+std::to_string(grid_size)+"/";
     std::filesystem::create_directories(sampled_points_dir);
-    // directory of the distances
-    std::string distances_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Distances/unprocessed/"+std::to_string(grid_size)+"/";
+    // directory of the distances, three different ones
+    std::string distances_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Distances/mesh_simplify/"+std::to_string(grid_size)+"/";
+    std::string threshold_distances_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Distances/mesh_simplify/"+std::to_string(grid_size)+"/";
     std::filesystem::create_directories(distances_dir);
 
     for (int i=0;i<input_mesh.size();i++){
@@ -90,6 +94,7 @@ int main(){
         std::string sampled_points_path=sampled_points_dir+clear_slash(input_mesh[i])+"_p.txt";
         std::cout<<"sampled points: "<<sampled_points_path<<std::endl;
         std::string distances_path=distances_dir+clear_slash(input_mesh[i])+"_d.txt";
+        //std::string threshold_distances=distances_dir+clear_slash(input_mesh[i])+"_d.txt";
         std::cout<<"distances: "<<distances_path<<std::endl;
         std::cout<<"original obj: "<<original_obj<<std::endl;
         std::cout<<"reconstructed obj: "<<reconstructed_obj<<std::endl;
@@ -157,6 +162,7 @@ int main(){
         tree.build(); 
 
         std::vector<double> distances_vector;
+        int count=0;
         for (auto p: r_sample_points){
             Point closest = tree.closest_point(p);
             //std::cout << "Closest point: " << closest<< std::endl;
@@ -164,8 +170,11 @@ int main(){
             std::ofstream myfile;
             myfile.open (distances_path, std::ios_base::app);
             //std::cout<<"current distance is: "<<CGAL::squared_distance(p,closest)<< std::endl;
-            distances_vector.emplace_back(CGAL::squared_distance(p,closest));
-            myfile <<std::fixed<<std::setprecision(8)<<CGAL::squared_distance(p,closest) << std::endl;
+            double c_distance=CGAL::squared_distance(p,closest);
+            if(c_distance>0.1){
+                count++;}
+            distances_vector.emplace_back(c_distance);
+            myfile <<std::fixed<<std::setprecision(8)<<c_distance<< std::endl;
             myfile.close();
         }
 
@@ -177,11 +186,41 @@ int main(){
         auto min_element = std::min_element(distances_vector.begin(), distances_vector.end());
         auto max_element = std::max_element(distances_vector.begin(), distances_vector.end());
 
-        // write to the evaluation file
-        std::ofstream evaluation_file(evaluation, std::ios::app);
-        evaluation_file<<clear_slash(input_mesh[i])<<","<<r_sample_points.size()<< "," <<std::setprecision(2)<<std::fixed<<elapsed.count() 
-        << "," << std::setprecision(4)<<std::fixed<<*min_element << "," << *max_element << std::endl;
-        evaluation_file.close();
+        // find the mean value of all the calculated distances
+        const auto sum = std::accumulate(distances_vector.begin(),distances_vector.end(), 0.0);
+        const auto mean =  sum / distances_vector.size();
+
+        // find the median value of all the calculated distances
+        double median;
+        int n = distances_vector.size();
+        std::sort(distances_vector.begin(), distances_vector.end());
+
+        if (n % 2 == 0) {
+            // even number of elements
+            median=(distances_vector[n/2 - 1] +distances_vector[n/2]) / 2.0;
+        } else {
+            // odd number of elements
+            median=distances_vector[n/2];
+        }
+
+        // find the standard deviation of all the calculated distances
+        // Calculate the sum of squared differences
+        double sum_sq_diff = 0;
+        for (double d : distances_vector) {
+            sum_sq_diff += pow(d - mean, 2);
+        }
+
+    // Calculate the standard deviation
+    double std_dev = sqrt(sum_sq_diff / n);
+
+    // calculate the percentage of points with distance greater than 0.2
+    double percentage = (double)count/(double)r_sample_points.size();
+
+    // write to the evaluation file
+    std::ofstream evaluation_file(evaluation, std::ios::app);
+    evaluation_file<<clear_slash(input_mesh[i])<<","<<r_sample_points.size()<< "," <<std::setprecision(2)<<std::fixed<<elapsed.count() 
+    << "," << std::setprecision(4)<<std::fixed<<*min_element << "," << *max_element <<","<<mean<<","<<std_dev<<","<<percentage<<std::endl;
+    evaluation_file.close();
     }
     
     return 0;
