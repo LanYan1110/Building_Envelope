@@ -6,6 +6,7 @@ set( CMAKE_BUILD_TYPE "Release")
 cmake_minimum_required(VERSION 3.1...3.23)
 project(Alpha_shapes_3)
 
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 find_package(CGAL REQUIRED)
 
 set(BCRYPT_LIBRARIES "bcrypt.lib")
@@ -13,7 +14,9 @@ set(BCRYPT_LIBRARIES "bcrypt.lib")
 set(Boost_INCLUDE_DIR "C:/Users/seuya/Documents/Thesis/IfcOpenshell/_deps/boost_1_74_0")
 set(Boost_LIBRARY_DIR "C:/Users/seuya/Documents/Thesis/IfcOpenshell/_deps/boost_1_74_0/stage/lib")
 
-include_directories(${Boost_INCLUDE_DIR})
+# set(Eigen_INCLUDE_DIR "C:/Users/seuya/Documents/Thesis/eigen-3.4.0")
+
+include_directories(${Boost_INCLUDE_DIR} ${Eigen_INCLUDE_DIR})
 
 # create a target per cppfile
 file(
@@ -26,7 +29,7 @@ add_executable(${PROJECT_NAME} main.cpp
 inc/constructor.cpp inc/off_to_obj_coverter.cpp inc/point_cloud_processor.cpp 
 inc/mesh_processor.cpp)
 
-target_link_libraries(${PROJECT_NAME} CGAL::CGAL ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} CGAL::CGAL ${Boost_LIBRARIES} Eigen3::Eigen)
 
 foreach(cppfile ${cppfiles})
   #create_single_source_cgal_program("${cppfile}")

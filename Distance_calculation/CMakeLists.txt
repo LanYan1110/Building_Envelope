@@ -2,7 +2,7 @@
 set( CMAKE_BUILD_TYPE "Release")
 
 cmake_minimum_required(VERSION 3.1...3.23)
-project(Alpha_shapes_3)
+project(distance_evaluation)
 
 find_package(CGAL REQUIRED)
 

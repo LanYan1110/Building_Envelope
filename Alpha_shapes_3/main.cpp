@@ -11,6 +11,7 @@
 #include <vector>
 #include <chrono>
 #include <iomanip>
+#include <Eigen/Dense>
 
 std::vector<std::string> GetInputs(std::string dir) {
 
@@ -69,27 +70,27 @@ int main()
     std::cin >> alpha;
 
     // alpha shape
-    for (size_t i = 0; i < input_files1.size(); i++) {
-        //time the process
-        auto start1 = std::chrono::high_resolution_clock::now();
-        // make a new folder for each file
-        std::string export_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OFF/unprocessed/"+std::to_string(grid_size)+"/";
-        std::filesystem::create_directories(export_dir);
-        std::string export_path =export_dir+clear_slash(input_files1[i])+ ".off";
-        std::cout<<export_path<<std::endl;
-        alpha_shape_constructor(input_files1[i],export_path,out_v,out_f,alpha);
-        std::string export_obj_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/unprocessed/"+std::to_string(grid_size)+"/";
-        std::filesystem::create_directories(export_obj_dir);
-        std::string export_obj = export_obj_dir+ clear_slash(input_files1[i]) + ".obj";
-        std::cout<<export_obj<<std::endl;
-        off_to_obj(export_path, export_obj);
-        auto finish1 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> elapsed1 = finish1 - start1;
-        evaluation_file.open(output_path[0], std::ios_base::app);
-        evaluation_file <<clear_slash(input_files1[i])<< "," <<out_v<< ","<<out_f<<","<<
-        std::fixed << std::setprecision(2)<<elapsed1.count()<< "\n";
-        evaluation_file.close();
-    }
+    // for (size_t i = 0; i < input_files1.size(); i++) {
+    //     //time the process
+    //     auto start1 = std::chrono::high_resolution_clock::now();
+    //     // make a new folder for each file
+    //     std::string export_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OFF/unprocessed/"+std::to_string(grid_size)+"/";
+    //     std::filesystem::create_directories(export_dir);
+    //     std::string export_path =export_dir+clear_slash(input_files1[i])+ ".off";
+    //     std::cout<<export_path<<std::endl;
+    //     alpha_shape_constructor(input_files1[i],export_path,out_v,out_f,alpha);
+    //     std::string export_obj_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/unprocessed/"+std::to_string(grid_size)+"/";
+    //     std::filesystem::create_directories(export_obj_dir);
+    //     std::string export_obj = export_obj_dir+ clear_slash(input_files1[i]) + ".obj";
+    //     std::cout<<export_obj<<std::endl;
+    //     off_to_obj(export_path, export_obj);
+    //     auto finish1 = std::chrono::high_resolution_clock::now();
+    //     std::chrono::duration<double> elapsed1 = finish1 - start1;
+    //     evaluation_file.open(output_path[0], std::ios_base::app);
+    //     evaluation_file <<clear_slash(input_files1[i])<< "," <<out_v<< ","<<out_f<<","<<
+    //     std::fixed << std::setprecision(2)<<elapsed1.count()<< "\n";
+    //     evaluation_file.close();
+    // }
 
     //test on multiple 3D alpha shapes
     //std::string test_file = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/Raw_point_cloud/indi_alpha_shapes/AC20-FZK-Haus.ifcr_p.xyz";
@@ -122,20 +123,22 @@ int main()
     // }
 
     // Process output alpha shapes
-    // std::string unprocessed_obj_dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/unprocessed/";
-    // std::string mesh_simplify_dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/mesh_simplify/";
-    // std::vector<std::string> input_files3 = GetInputs(unprocessed_obj_dir);
-    // for (size_t i = 0; i < input_files3.size(); i++) {
-    //     auto start3 = std::chrono::high_resolution_clock::now();
-    //     std::string simplified_obj = mesh_simplify_dir+ clear_slash(input_files1[i])+ ".obj";
-    //     mesh_processor(input_files3[i], simplified_obj,0.5,out_v,out_f);
-    //     auto finish3 = std::chrono::high_resolution_clock::now();
-    //     std::chrono::duration<double> elapsed3 = finish3 - start3;
-    //     evaluation_file.open(output_path[2], std::ios_base::app);
-    //     evaluation_file <<clear_slash(input_files2[i])<< "," <<out_v<< ","<<out_f<<","<<
-    //     std::fixed << std::setprecision(2)<<elapsed3.count()<< "\n";
-    //     evaluation_file.close();
-    // }
+    //creaye a new folder for the output
+    std::string unprocessed_obj_dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/unprocessed/"+std::to_string(grid_size)+"/";
+    std::string mesh_simplify_dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/mesh_simplify/"+std::to_string(grid_size)+"/";
+    std::filesystem::create_directories(mesh_simplify_dir);
+    std::vector<std::string> input_files3 = GetInputs(unprocessed_obj_dir);
+    for (size_t i = 0; i < input_files3.size(); i++) {
+        auto start3 = std::chrono::high_resolution_clock::now();
+        std::string simplified_obj = mesh_simplify_dir+ clear_slash(input_files1[i])+ ".obj";
+        mesh_processor(input_files3[i], simplified_obj,out_v,out_f);
+        auto finish3 = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed3 = finish3 - start3;
+        evaluation_file.open(output_path[2], std::ios_base::app);
+        evaluation_file <<clear_slash(input_files3[i])<< "," <<out_v<< ","<<out_f<<","<<
+        std::fixed << std::setprecision(2)<<elapsed3.count()<< "\n";
+        evaluation_file.close();
+    }
 
     return 0;
 }

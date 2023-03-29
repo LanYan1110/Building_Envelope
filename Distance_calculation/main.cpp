@@ -19,6 +19,7 @@
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/AABB_face_graph_triangle_primitive.h>
 
+
 typedef CGAL::Simple_cartesian<double> K;
 typedef K::Point_3 Point;
 typedef K::Ray_3 Ray;
@@ -58,31 +59,38 @@ int main(){
 
     // directory of the orginal ifc meshes
     std::string input_mesh_dir="C:/Users/seuya/Documents/Thesis/RawData/obj/";
-    //std::vector<std::string> input_mesh=GetInputs(input_mesh_dir);
-    std::vector<std::string> input_mesh;
-    input_mesh.emplace_back("C:/Users/seuya/Documents/Thesis/RawData/obj/AC20-FZK-Haus.obj");
-
+    std::vector<std::string> input_mesh=GetInputs(input_mesh_dir);
 
     // directory of the reconstructed ifc meshes
-    std::string reconstructed_mesh_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/mesh_simplify/";
-    //std::vector<std::string> reconstructed_mesh=GetInputs(reconstructed_mesh_dir);
-    std::vector<std::string> reconstructed_mesh;
-    reconstructed_mesh.emplace_back("C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/mesh_simplify/AC20-FZK-Haus.ifcr_p.xyz.obj");
-
+    double grid_size;
+    std::cout<<"Enter the grid size: ";
+    std::cin>>grid_size;
+    std::string reconstructed_mesh_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/unprocessed/"+std::to_string(grid_size)+"/";
+    std::vector<std::string> reconstructed_mesh=GetInputs(reconstructed_mesh_dir);
+ 
     // path to the evaluation file
- //   std::string evaluation="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Evaluation/evaluation_distance_mesh_simplify.csv";
- //   // write to the evaluation file
- //   std::ofstream evaluation_file;
-	//evaluation_file.open(evaluation);
- //   evaluation_file<<"name"<<","<<"number of points" << "," << "time" << "," << "min" << "," << "max" << std::endl;
- //   evaluation_file.close();
+   std::string evaluation="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Evaluation/evaluation_distance_"+std::to_string(grid_size)+".csv";
+   // write to the evaluation file
+   std::ofstream evaluation_file;
+   evaluation_file.open(evaluation);
+   evaluation_file<<"name"<<","<<"number of points" << "," << "time" << "," << "min" << "," << "max" << std::endl;
+   evaluation_file.close();
+
+    // directory of the sampled points
+    std::string sampled_points_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Points/unprocessed/"+std::to_string(grid_size)+"/";
+    std::filesystem::create_directories(sampled_points_dir);
+    // directory of the distances
+    std::string distances_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Distances/unprocessed/"+std::to_string(grid_size)+"/";
+    std::filesystem::create_directories(distances_dir);
 
     for (int i=0;i<input_mesh.size();i++){
         auto start = std::chrono::high_resolution_clock::now();
         std::string original_obj=input_mesh[i];
         std::string reconstructed_obj=reconstructed_mesh[i];
-        std::string sampled_points="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Points/mesh_simplify/"+clear_slash(input_mesh[i])+"_p.txt";
-        std::string distances="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Distances/mesh_simplify/"+clear_slash(input_mesh[i])+"_d.txt";
+        std::string sampled_points_path=sampled_points_dir+clear_slash(input_mesh[i])+"_p.txt";
+        std::cout<<"sampled points: "<<sampled_points_path<<std::endl;
+        std::string distances_path=distances_dir+clear_slash(input_mesh[i])+"_d.txt";
+        std::cout<<"distances: "<<distances_path<<std::endl;
         std::cout<<"original obj: "<<original_obj<<std::endl;
         std::cout<<"reconstructed obj: "<<reconstructed_obj<<std::endl;
 
@@ -112,10 +120,14 @@ int main(){
         std::back_insert_iterator<std::vector<Point>> outputIterator(r_sample_points);
 
         PMP::triangulate_faces(r_surface_mesh);
-        PMP::sample_triangle_mesh(r_surface_mesh,outputIterator);
+        // PMP::sample_triangle_mesh(r_surface_mesh,outputIterator,
+        // CGAL::parameters::use_monte_carlo_sampling(true).
+        // number_of_points_on_faces(10));
+        PMP::sample_triangle_mesh(r_surface_mesh,outputIterator,
+        CGAL::parameters::number_of_points_on_faces(1));
 
         // write the sampled points to a file
-        std::ofstream out(sampled_points);
+        std::ofstream out(sampled_points_path);
         for (auto p: r_sample_points){
             out << p.x() << " " << p.y() << " " << p.z() << std::endl;
         }
@@ -150,7 +162,7 @@ int main(){
             //std::cout << "Closest point: " << closest<< std::endl;
             // open the distance text file and append the distance
             std::ofstream myfile;
-            myfile.open (distances, std::ios_base::app);
+            myfile.open (distances_path, std::ios_base::app);
             //std::cout<<"current distance is: "<<CGAL::squared_distance(p,closest)<< std::endl;
             distances_vector.emplace_back(CGAL::squared_distance(p,closest));
             myfile <<std::fixed<<std::setprecision(8)<<CGAL::squared_distance(p,closest) << std::endl;
@@ -166,10 +178,10 @@ int main(){
         auto max_element = std::max_element(distances_vector.begin(), distances_vector.end());
 
         // write to the evaluation file
-        //std::ofstream evaluation_file(evaluation, std::ios::app);
-        //evaluation_file<<clear_slash(input_mesh[i])<<","<<r_sample_points.size()<< "," <<std::setprecision(2)<<std::fixed<<elapsed.count() 
-        //<< "," << std::setprecision(4)<<std::fixed<<*min_element << "," << *max_element << std::endl;
-        //evaluation_file.close();
+        std::ofstream evaluation_file(evaluation, std::ios::app);
+        evaluation_file<<clear_slash(input_mesh[i])<<","<<r_sample_points.size()<< "," <<std::setprecision(2)<<std::fixed<<elapsed.count() 
+        << "," << std::setprecision(4)<<std::fixed<<*min_element << "," << *max_element << std::endl;
+        evaluation_file.close();
     }
     
     return 0;
