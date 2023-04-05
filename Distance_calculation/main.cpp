@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <algorithm>
 #include <numeric>
+#include <cmath>
 
 #include <CGAL/Surface_mesh/IO/OFF.h>
 #include <CGAL/Simple_cartesian.h>
@@ -59,6 +60,11 @@ std::vector<std::string> GetInputs(std::string dir) {
 
 int main(){
 
+    // enter testing type
+    std::string type;
+    std::cout << "Enter the type of alpha shape test:unprocessed,wlop_simplify,mesh_simplify";
+    std::cin >> type;
+
     // directory of the orginal ifc meshes
     std::string input_mesh_dir="C:/Users/seuya/Documents/Thesis/RawData/obj/";
     std::vector<std::string> input_mesh=GetInputs(input_mesh_dir);
@@ -67,16 +73,18 @@ int main(){
     double grid_size;
     std::cout<<"Enter the grid size: ";
     std::cin>>grid_size;
-    std::string reconstructed_mesh_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/mesh_simplify/"+std::to_string(grid_size)+"/";
+
+    std::string reconstructed_mesh_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/"+type+"/"+std::to_string(grid_size)+"/";
     std::vector<std::string> reconstructed_mesh=GetInputs(reconstructed_mesh_dir);
  
     // path to the evaluation file
-    std::string evaluation="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Evaluation/evaluation_distance_"+std::to_string(grid_size)+"_mesh_simplify.csv";
+    std::string evaluation="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Evaluation/evaluation_distance_"+std::to_string(grid_size)+"_"+type+".csv";
     // write to the evaluation file
     std::ofstream evaluation_file;
     evaluation_file.open(evaluation);
     evaluation_file<<"name"<<","<<"number of points" << "," << "time" << "," << "min" << "," << "max" <<
-    ","<<"mean"<<","<<"SD"<<","<<">0.1_percentage"<<std::endl;
+    ","<<"mean"<<","<<"SD"<<","<<"0.025-0.5_percentage"<<","<<">0.05-0.1_percentage"<<
+    ","<<">0.1_percentage"<<std::endl;
     evaluation_file.close();
 
     // directory of the sampled points
@@ -93,9 +101,8 @@ int main(){
         std::string reconstructed_obj=reconstructed_mesh[i];
         std::string sampled_points_path=sampled_points_dir+clear_slash(input_mesh[i])+"_p.txt";
         std::cout<<"sampled points: "<<sampled_points_path<<std::endl;
-        std::string distances_path=distances_dir+clear_slash(input_mesh[i])+"_d.txt";
-        //std::string threshold_distances=distances_dir+clear_slash(input_mesh[i])+"_d.txt";
-        std::cout<<"distances: "<<distances_path<<std::endl;
+        std::string log_distances=distances_dir+clear_slash(input_mesh[i])+"l_d.txt";
+        std::cout<<"distances: "<<log_distances<<std::endl;
         std::cout<<"original obj: "<<original_obj<<std::endl;
         std::cout<<"reconstructed obj: "<<reconstructed_obj<<std::endl;
 
@@ -131,13 +138,6 @@ int main(){
         PMP::sample_triangle_mesh(r_surface_mesh,outputIterator,
         CGAL::parameters::number_of_points_on_faces(1));
 
-        // write the sampled points to a file
-        std::ofstream out(sampled_points_path);
-        for (auto p: r_sample_points){
-            out << p.x() << " " << p.y() << " " << p.z() << std::endl;
-        }
-        out.close();
-
         // read original obj and construct AABB tree
         std::vector<Point> points;
         std::vector<std::vector<std::size_t>> faces1;
@@ -162,20 +162,36 @@ int main(){
         tree.build(); 
 
         std::vector<double> distances_vector;
-        int count=0;
+        int count1=0; int count2=0; int count3=0;
+        double t_dist=0;
+        // open in append mode
+        std::ofstream out(sampled_points_path,std::ios::app);
+        std::ofstream out2(log_distances,std::ios::app);
+
         for (auto p: r_sample_points){
+
+            // calculate the distance
             Point closest = tree.closest_point(p);
-            //std::cout << "Closest point: " << closest<< std::endl;
-            // open the distance text file and append the distance
-            std::ofstream myfile;
-            myfile.open (distances_path, std::ios_base::app);
-            //std::cout<<"current distance is: "<<CGAL::squared_distance(p,closest)<< std::endl;
             double c_distance=CGAL::squared_distance(p,closest);
+            // push the distance to the vector
+            distances_vector.push_back(c_distance);
+            // if the distance is between 0.025 and 0.05, count it
+            if(c_distance>0.025 && c_distance<0.05){
+                t_dist=1;
+                count1++;}
+            // if the distance is between 0.05 and 0.1, count it
+            if(c_distance>0.05 && c_distance<0.1){
+                t_dist=2;
+                count2++;}
+            // if the distance is bigger than 0.1, count it
             if(c_distance>0.1){
-                count++;}
-            distances_vector.emplace_back(c_distance);
-            myfile <<std::fixed<<std::setprecision(8)<<c_distance<< std::endl;
-            myfile.close();
+                t_dist=3;
+                count3++;}
+            // write the points to a file
+            out << p.x() << " " << p.y() << " " << p.z() <<""<<t_dist<<std::endl;
+            //reset the t_dist value to 0 for the next point
+            t_dist=0;
+            
         }
 
         auto finish = std::chrono::high_resolution_clock::now();
@@ -208,18 +224,25 @@ int main(){
         double sum_sq_diff = 0;
         for (double d : distances_vector) {
             sum_sq_diff += pow(d - mean, 2);
+            double c_l_d=log(d);
+            out2<<c_l_d<<std::endl;
         }
 
     // Calculate the standard deviation
     double std_dev = sqrt(sum_sq_diff / n);
 
-    // calculate the percentage of points with distance greater than 0.2
-    double percentage = (double)count/(double)r_sample_points.size();
+    // calculate the percentage of points with distance between 0.025 and 0.05
+    double percentage1 = (double)count1/(double)r_sample_points.size();
+    double percentage2 = (double)count2/(double)r_sample_points.size();
+    double percentage3 = (double)count3/(double)r_sample_points.size();
+
 
     // write to the evaluation file
     std::ofstream evaluation_file(evaluation, std::ios::app);
     evaluation_file<<clear_slash(input_mesh[i])<<","<<r_sample_points.size()<< "," <<std::setprecision(2)<<std::fixed<<elapsed.count() 
-    << "," << std::setprecision(4)<<std::fixed<<*min_element << "," << *max_element <<","<<mean<<","<<std_dev<<","<<percentage<<std::endl;
+    << "," << std::setprecision(4)<<std::fixed<<*min_element << "," << *max_element <<","<<mean<<","<<std_dev<<","<<percentage1<<
+    ","<<percentage2<<","<<percentage3<<std::endl;
+    
     evaluation_file.close();
     }
     

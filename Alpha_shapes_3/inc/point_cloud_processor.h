@@ -14,6 +14,7 @@
 #include <CGAL/random_simplify_point_set.h>
 #include <CGAL/IO/read_points.h>
 #include <CGAL/IO/OBJ.h>
+#include <CGAL/Surface_mesh.h>
 
 #include <CGAL/IO/read_points.h>
 #include <CGAL/IO/write_points.h>
@@ -23,6 +24,17 @@
 #include <CGAL/Timer.h>
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/wlop_simplify_and_regularize_point_set.h>
+
+
+// bounding box includes
+// #include <CGAL/Aff_transformation_3.h>
+// #include <CGAL/Optimal_bounding_box/oriented_bounding_box.h>
+// #include <CGAL/bounding_box.h>
+#include <CGAL/optimal_bounding_box.h>
+#include <CGAL/Polygon_mesh_processing/triangulate_faces.h>
+#include <CGAL/Polygon_mesh_processing/measure.h>
+#include <CGAL/Polygon_mesh_processing/IO/polygon_mesh_io.h>
+#include <CGAL/squared_distance_3.h> //for 3D functions
 
 #include <fstream>
 #include <sstream>
@@ -44,6 +56,7 @@ typedef CGAL::Alpha_shape_3<Triangulation_3>         Alpha_shape_3;
 
 typedef Gt::Point_3                                  Point;
 typedef Alpha_shape_3::Alpha_iterator                Alpha_iterator;
+typedef CGAL::Surface_mesh<Point>                              Mesh;
 
 typedef CGAL::Simple_cartesian<double> Kernel;
 typedef CGAL::Parallel_if_available_tag Concurrency_tag;

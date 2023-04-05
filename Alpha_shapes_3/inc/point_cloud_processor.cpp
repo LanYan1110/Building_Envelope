@@ -191,7 +191,7 @@ int wlop_simplify(std::string input_path,std::string output_dir) {
     //function to simplify point cloud using wlop algorithm
     //input: point cloud, .XYZ file
     //input: output directory for processed point cloud, .XYZ file
-    //return: none
+    //return: 0 or 1
 
     std::vector<Point> points;
     std::ifstream is(input_path);
@@ -214,8 +214,23 @@ int wlop_simplify(std::string input_path,std::string output_dir) {
     // Simplification: wlop_simplify
     std::vector<Point> output;
     //parameters
-    const double retain_percentage =65;   // percentage of points to retain.
-    const double neighbor_radius = 0.3;   // neighbors size.
+    const double retain_percentage =5;   // percentage of points to retain.
+    //compute the optimal neighbor radius
+    double neighbor_radius;
+    //compute the bbox of the point set
+    std::array<Point, 8> obb_points;
+    CGAL::oriented_bounding_box(points, obb_points,CGAL::parameters::use_convex_hull(true));
+    double diag=0; double cur_dist=0;
+    for (int i = 1; i < 8; i++) {
+       cur_dist=CGAL::squared_distance(obb_points[0],obb_points[i]);
+       if(cur_dist>diag){
+              diag=cur_dist;
+       }
+    }
+    
+    neighbor_radius=4*sqrt(diag/points.size());
+    std::cout << "neighbor_radius: " << neighbor_radius << std::endl;
+    
     // Output filename
     std::string output_filename = output_dir + clear_slash(input_path) + "_wlop_simplify_" + ".xyz";
     
