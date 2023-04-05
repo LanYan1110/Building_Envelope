@@ -88,11 +88,10 @@ int main(){
     evaluation_file.close();
 
     // directory of the sampled points
-    std::string sampled_points_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Points/mesh_simplify/"+std::to_string(grid_size)+"/";
+    std::string sampled_points_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Points/"+type+"/"+std::to_string(grid_size)+"/";
     std::filesystem::create_directories(sampled_points_dir);
     // directory of the distances, three different ones
-    std::string distances_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Distances/mesh_simplify/"+std::to_string(grid_size)+"/";
-    std::string threshold_distances_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Distances/mesh_simplify/"+std::to_string(grid_size)+"/";
+    std::string distances_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/Distances/"+type+"/"+std::to_string(grid_size)+"/";
     std::filesystem::create_directories(distances_dir);
 
     for (int i=0;i<input_mesh.size();i++){
@@ -188,7 +187,7 @@ int main(){
                 t_dist=3;
                 count3++;}
             // write the points to a file
-            out << p.x() << " " << p.y() << " " << p.z() <<""<<t_dist<<std::endl;
+            out << p.x() << "," << p.y() << "," << p.z() <<","<<t_dist<<std::endl;
             //reset the t_dist value to 0 for the next point
             t_dist=0;
             

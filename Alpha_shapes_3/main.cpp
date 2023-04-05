@@ -153,7 +153,7 @@ int main()
     else if(type=="mesh_simplify"){
         //creaye a new folder for the output
         std::string unprocessed_obj_dir = "C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/unprocessed/"+std::to_string(grid_size)+"/";
-        std::string mesh_simplify_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OFF/"+type+"/"+std::to_string(grid_size)+"/";
+        std::string mesh_simplify_dir="C:/Users/seuya/Documents/Thesis/Intermediate_Data/OBJ/"+type+"/"+std::to_string(grid_size)+"/";
         std::filesystem::create_directories(mesh_simplify_dir);
         std::vector<std::string> input_files3 = GetInputs(unprocessed_obj_dir);
         for (size_t i = 0; i < input_files3.size(); i++) {
