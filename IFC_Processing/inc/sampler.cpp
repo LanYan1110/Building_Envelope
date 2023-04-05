@@ -114,9 +114,7 @@ int& input_v, int& input_f,int& out_v,double grid_size) {
 		if (prod->hasRepresentation())
 		{
 			if (prod->data().type()->name() == "IfcSite" ||
-				prod->data().type()->name() == "IfcStair" ||
 				prod->data().type()->name() == "IfcSpace" ||
-				prod->data().type()->name() == "IfcRailing" ||
 				prod->data().type()->name() == "IfcBuildingElementProxy" ||
 				prod->data().type()->name() == "IfcAnnotation") {
 				continue;
